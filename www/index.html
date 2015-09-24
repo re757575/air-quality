@@ -23,13 +23,36 @@
   </head>
   <body ng-app="starter">
 
-    <ion-pane>
-      <ion-header-bar class="bar-stable">
-        <h1 class="title">空白 Ionic 專案</h1>
-      </ion-header-bar>
-      <ion-content>
-        我是內容
-      </ion-content>
-    </ion-pane>
+    <ion-nav-view></ion-nav-view>
+
+    <script id="home.html" type="text/ng-template">
+        <ion-view title="首頁" >
+            <ion-nav-bar class="bar-positive">
+              <ion-back-buttons></ion-back-buttons>
+            </ion-nav-bar>
+            <ion-content>
+              首頁內容
+            </ion-content>
+            <ion-tabs class="tabs-icon-top">
+                <ion-tab title="首頁" icon="ion-home" href="/home"></ion-tab>
+                <ion-tab title="頁面-1" icon="ion-document" href="/page1"></ion-tab>
+            </ion-tabs>
+        </ion-view>
+    </script>
+    <script id="page1.html" type="text/ng-template">
+         <ion-view title="頁面-1">
+            <ion-nav-bar class="bar-positive">
+              <ion-back-buttons></ion-back-buttons>
+            </ion-nav-bar>
+            <ion-content>
+              page1內容
+            </ion-content>
+            <ion-tabs class="tabs-icon-top">
+                <ion-tab title="首頁" icon="ion-home" href="/home"></ion-tab>
+                <ion-tab title="頁面-1" icon="ion-document" href="/page1"></ion-tab>
+            </ion-tabs>
+        </ion-view>
+    </script>
+
   </body>
 </html>
