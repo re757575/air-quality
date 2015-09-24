@@ -36,11 +36,12 @@ app.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/home');
   $stateProvider.state('home', {
       url: '/home',
-      templateUrl: 'templates/home.html'
+      templateUrl: 'templates/home.html',
+      controller: 'homeCtrl'
   })
-  .state('page1', {
-      url: '/page1',
-      templateUrl: 'templates/page1.html'
+  .state('details', {
+      url: '/home/:sid',
+      templateUrl: 'templates/details.html',
+      controller: 'detailsCtrl'
   });
 });
-

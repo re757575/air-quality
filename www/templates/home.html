@@ -1,12 +1,11 @@
-<ion-view title="首頁" >
-<ion-nav-bar class="bar-positive">
-  <ion-back-buttons></ion-back-buttons>
-</ion-nav-bar>
-<ion-content>
-  首頁內容
-</ion-content>
-<ion-tabs class="tabs-icon-top">
-    <ion-tab title="首頁" icon="ion-home" href="/home"></ion-tab>
-    <ion-tab title="頁面-1" icon="ion-document" href="/page1"></ion-tab>
-</ion-tabs>
+<ion-view title="清單">
+    <ion-nav-bar>
+    </ion-nav-bar>
+    <ion-content>
+        <div class="list">
+            <div class="item" ng-repeat="item in stocks">
+                <a href="#/home/{{$index}}">{{item.id}} {{item.name}}</a>
+            </div>
+        </div>
+    </ion-content>
 </ion-view>

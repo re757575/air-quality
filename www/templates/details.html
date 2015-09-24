@@ -1,0 +1,24 @@
+ <ion-view title="{{stock.name}}">
+    <ion-nav-bar>
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <div class="list card">
+            <div class="item item-icon-left">
+                <i class="icon ion-podium"></i>
+                <h2>{{stock.id}}{{stock.name}}</h2>
+                <p>{{stock.Desc}}</p>
+            </div>
+            <div class="item item-body">
+                <div class="row">
+                    <div class="col">股價<br>{{stock.price}}</div>
+                    <div class="col">本益比<br>{{stock.PER}}</div>
+                </div>
+                <div class="row">
+                    <div class="col">股價淨值比<br>{{stock.PBR}}</div>
+                    <div class="col">殖利率<br>{{stock.yield}}%</div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
