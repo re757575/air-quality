@@ -32,16 +32,36 @@ app.run(function($ionicPlatform) {
   });
 });
 
-app.config(function ($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise('/home');
-  $stateProvider.state('home', {
-      url: '/home',
-      templateUrl: 'templates/home.html',
-      controller: 'homeCtrl'
-  })
-  .state('details', {
-      url: '/home/:sid',
-      templateUrl: 'templates/details.html',
-      controller: 'detailsCtrl'
-  });
+app.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  $ionicConfigProvider.tabs.position('bottom');
+  $urlRouterProvider.otherwise('/tab/home');
+  $stateProvider
+    .state('tab', {
+        url: '/tab',
+        abstract: true,
+        templateUrl: 'templates/tabs.html'
+    })
+    .state('tab.home', {
+        url: '/home',
+        views: {
+            'tab-home': {
+                templateUrl: 'templates/home.html',
+                controller: 'homeCtrl'
+            }
+        }
+    })
+    .state('tab.settings', {
+        url: '/settings',
+        views: {
+            'tab-settings': {
+                templateUrl: 'templates/settings.html',
+                controller: 'settingsCtrl'
+            }
+        }
+    })
+    .state('weather', {
+        url: '/tab/home/:id',
+        templateUrl: 'templates/weather.html',
+        controller: 'weatherCtrl'
+    });
 });

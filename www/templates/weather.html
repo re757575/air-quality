@@ -1,0 +1,24 @@
+<ion-view title="天氣概況">
+    <ion-content>
+        <div class="list card">
+            <div class="item">
+                <h2>City of {{weather.name}}</h2>                
+            </div>
+            <div class="item item-avatar">
+                <img src="{{img_base_url+weather.weather[0].icon+'.png'}}">
+                <h2>{{weather.main['temp']-273.15 | number:1}}°C</h2>
+                <h2>{{(weather.dt+8*60*60)*1000 | date:'yyyy-MM-dd HH:mm:ss'}}</h2>
+            </div>
+            <div class="item">
+                <div class="row">
+                    <div class="col">濕度</div>
+                    <div class="col">{{weather.main.humidity}}%</div>
+                </div>
+                <div class="row">
+                    <div class="col">風速</div>
+                    <div class="col">{{weather.wind.speed}}哩/秒</div>
+                </div>
+            </div>
+        </div>
+    </ion-content>    
+</ion-view>

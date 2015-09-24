@@ -1,11 +1,12 @@
-<ion-view title="清單">
-    <ion-nav-bar>
-    </ion-nav-bar>
+<ion-view title="目前天氣">
     <ion-content>
-        <div class="list">
-            <div class="item" ng-repeat="item in stocks">
-                <a href="#/home/{{$index}}">{{item.id}} {{item.name}}</a>
-            </div>
-        </div>
+        <ion-list class="list">
+            <ion-item class="item item-icon-left" ng-repeat="city in citys"
+                      ng-click="showWeather($index)"
+                      ng-show="city.on">
+                <i class="icon ion-ios-home-outline"></i>
+                {{city.name}}
+            </ion-item>
+        </ion-list>
     </ion-content>
 </ion-view>
