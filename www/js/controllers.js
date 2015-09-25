@@ -27,144 +27,47 @@ app.controller('settingsCtrl', function($scope, $stateParams, $ionicTabsDelegate
     }
 });
 
-app.controller('airCtrl', function($scope, $stateParams, $http, $ionicLoading) {
-    $scope.city = citys[$stateParams.id];
+app.controller('airCtrl', ['$http', '$scope', '$stateParams', '$ionicLoading', '$ionicScrollDelegate', 'getDataService',
+    function($http, $scope, $stateParams, $ionicLoading, $ionicScrollDelegate, getDataService) {
 
-    $ionicLoading.show({
-        content: 'Loading',
-        animation: 'fade-in',
-        showBackdrop: true,
-        maxWidth: 200,
-        showDelay: 0
-    });
+        $scope.city = citys[$stateParams.id];
 
-    var param = {
-        '$filter': "County eq '"+ $scope.city.q +"'",
-        '$orderby': 'SiteName',
-        '$skip': 0,
-        '$top': 1000,
-        'format': 'json',
-        'callback': 'JSON_CALLBACK'
-    };
+        $ionicLoading.show({
+            content: 'Loading',
+            animation: 'fade-in',
+            showBackdrop: true,
+            maxWidth: 200,
+            showDelay: 0,
+            template: '讀取中..'
+        });
 
-    var paramStr = Object.keys(param).map(function(key) {
-        return key + '=' + param[key];
-    }).join('&');
+        getDataService.loadData('AirQuality', {'city': $scope.city.q})
+        .then(function(data) {
+            $scope.airList = data;
+        }, function(error) {
+            $scope.airList = [];
+            alert('Error: '+ error.status);
+            console.log(error);
+        }).finally(function() {
+            $ionicLoading.hide();
+        });
 
-    var url = encodeURI("http://opendata.epa.gov.tw/ws/Data/AQX/?"+ paramStr);
+        $scope.doRefresh = function() {
+            getDataService.loadData('AirQuality', {'city': $scope.city.q})
+            .then(function(data) {
+                $scope.airList = data;
+            }, function(error) {
+                $scope.airList = [];
+                alert('Error: '+ error.status);
+                console.log(error);
+            }).finally(function() {
+                $scope.$broadcast('scroll.refreshComplete');
+            });
+        };
 
-    $http.jsonp(url)
-    .success(function (data, status, headers, config, statusText) {
-        console.log(data);
-        console.log(status);
-
-        var imageBaseUrl = 'img/face-icon/48/';
-        for (var i in data) {
-
-            var PSI = data[i].PSI;
-            var PM25 = data[i]['PM2.5'];
-
-            if (PM25 === '') {
-                data[i]['PM2.5'] = '通訊異常 或 設備維護';
-            }
-
-            if (PSI <= 50) {
-                // 良好
-                data[i]['img'] = imageBaseUrl + 'laughing-face.png';
-            } else if (PSI >= 51 && PSI <= 100) {
-                // 普通
-                data[i]['img'] = imageBaseUrl + 'neutral-face.png';
-            } else if (PSI >= 101 && PSI <= 199) {
-                // 不良
-                data[i]['img'] = imageBaseUrl + 'sad-face-eyebrows.png';
-            } else if (PSI >= 200 && PSI <= 299) {
-                // 非常不良
-                data[i]['img'] = imageBaseUrl + 'angry-face.png';
-            } else {
-                // 有害
-                data[i]['img'] = imageBaseUrl + 'angry-face-teeth.png';
-            }
-        }
-
-        $scope.airList = data;
-        $ionicLoading.hide();
-    })
-    .error(function(data, status) {
-        console.log(data);
-        console.log(status);
-        $ionicLoading.hide();
-        alert(status);
-
-    });
-
-
-  $scope.doRefresh = function() {
-
-    var param = {
-        '$filter': "County eq '"+ $scope.city.q +"'",
-        '$orderby': 'SiteName',
-        '$skip': 0,
-        '$top': 1000,
-        'format': 'json',
-        'callback': 'JSON_CALLBACK'
-    };
-
-    var paramStr = Object.keys(param).map(function(key) {
-        return key + '=' + param[key];
-    }).join('&');
-
-    var url = encodeURI("http://opendata.epa.gov.tw/ws/Data/AQX/?"+ paramStr);
-
-    $http.jsonp(url)
-    .success(function (data, status, headers, config, statusText) {
-        console.log(data);
-        console.log(status);
-
-        var imageBaseUrl = 'img/face-icon/48/';
-        for (var i in data) {
-
-            var PSI = data[i].PSI;
-            var PM25 = data[i]['PM2.5'];
-
-            if (PM25 === '') {
-                data[i]['PM2.5'] = '通訊異常 或 設備維護';
-            }
-
-            if (PSI <= 50) {
-                // 良好
-                data[i]['img'] = imageBaseUrl + 'laughing-face.png';
-            } else if (PSI >= 51 && PSI <= 100) {
-                // 普通
-                data[i]['img'] = imageBaseUrl + 'neutral-face.png';
-            } else if (PSI >= 101 && PSI <= 199) {
-                // 不良
-                data[i]['img'] = imageBaseUrl + 'sad-face-eyebrows.png';
-            } else if (PSI >= 200 && PSI <= 299) {
-                // 非常不良
-                data[i]['img'] = imageBaseUrl + 'angry-face.png';
-            } else {
-                // 有害
-                data[i]['img'] = imageBaseUrl + 'angry-face-teeth.png';
-            }
-        }
-
-        $scope.airList = data;
-        $ionicLoading.hide();
-    })
-    .error(function(data, status) {
-        console.log(data);
-        console.log(status);
-        $ionicLoading.hide();
-        alert(status);
-
-    }).finally(function() {
-       // Stop the ion-refresher from spinning
-       $scope.$broadcast('scroll.refreshComplete');
-    });
-
-  };
-
-});
+        $scope.doPulling = function(e) {};
+    }
+]);
 
 var citys = [
     {name: "台北", q: "臺北市", on: true},
@@ -173,5 +76,3 @@ var citys = [
     {name: "高雄", q: "高雄市", on: true},
     {name: "花蓮", q: "花蓮縣", on: true},
 ];
-
-console.log('starter.controllers');

@@ -3,7 +3,13 @@
         <ion-nav-back-button></ion-nav-back-button>
     </ion-nav-bar>
     <ion-content>
-        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
+
+        <ion-refresher
+            pulling-text="Pull to refresh..."
+            on-refresh="doRefresh()"
+            on-pulling="doPulling()">
+        </ion-refresher>
+
         <div ng-repeat="air in airList" class="list card">
             <div class="item">
                 <h2>{{air.SiteName}}</h2>                
@@ -24,5 +30,6 @@
                 </div>
             </div>
         </div>
+
     </ion-content>    
 </ion-view>

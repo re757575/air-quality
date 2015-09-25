@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-var app = angular.module('starter', ['ionic', 'starter.controllers']);
+var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services']);
 
 app.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -16,16 +16,16 @@ app.run(function($ionicPlatform) {
       StatusBar.styleDefault();
     }
 
-    var isAndroid = ionic.Platform.isAndroid();
-    console.log('isAndroid: ' + isAndroid);
+    // var isAndroid = ionic.Platform.isAndroid();
+    // console.log('isAndroid: ' + isAndroid);
 
-    var deviceInformation = ionic.Platform.device();
-    console.log('deviceInformation: ' + deviceInformation);
+    // var deviceInformation = ionic.Platform.device();
+    // console.log('deviceInformation: ' + deviceInformation);
 
-    var currentPlatform = ionic.Platform.platform();
-    var currentPlatformVersion = ionic.Platform.version();
-    console.log('currentPlatform:' + currentPlatform);
-    console.log('currentPlatformVersion:' + currentPlatformVersion);
+    // var currentPlatform = ionic.Platform.platform();
+    // var currentPlatformVersion = ionic.Platform.version();
+    // console.log('currentPlatform:' + currentPlatform);
+    // console.log('currentPlatformVersion:' + currentPlatformVersion);
 
     // ionic.Platform.exitApp();
 
