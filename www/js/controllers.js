@@ -1,19 +1,42 @@
 // Ionic Starter Controllers
 var app = angular.module('starter.controllers', []);
 
-app.controller('homeCtrl', function($scope, $location) {
+app.controller('homeCtrl', function($scope, $location, $ionicTabsDelegate) {
     $scope.citys = citys;
     $scope.showWeather = function(index) {
         $location.path('/tab/home/'+index);
     };
+
+    $scope.goSettings = function () {
+        var selected = $ionicTabsDelegate.selectedIndex();
+        if (selected != -1) {
+            $ionicTabsDelegate.select(selected + 1);
+        }
+    }
+
 });
 
-app.controller('settingsCtrl', function($scope, $stateParams) {
+app.controller('settingsCtrl', function($scope, $stateParams, $ionicTabsDelegate) {
     $scope.citys = citys;
+
+    $scope.goHome = function () {
+        var selected = $ionicTabsDelegate.selectedIndex();
+        if (selected != -1 && selected != 0) {
+            $ionicTabsDelegate.select(selected - 1);
+        }
+    }
 });
 
-app.controller('airCtrl', function($scope, $stateParams, $http) {
+app.controller('airCtrl', function($scope, $stateParams, $http, $ionicLoading) {
     $scope.city = citys[$stateParams.id];
+
+    $ionicLoading.show({
+        content: 'Loading',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
+    });
 
     var param = {
         '$filter': "County eq '"+ $scope.city.q +"'",
@@ -64,11 +87,14 @@ app.controller('airCtrl', function($scope, $stateParams, $http) {
         }
 
         $scope.airList = data;
+        $ionicLoading.hide();
     })
     .error(function(data, status) {
         console.log(data);
         console.log(status);
+        $ionicLoading.hide();
         alert(status);
+
     });
 });
 
