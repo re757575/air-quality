@@ -66,6 +66,13 @@ app.controller('airCtrl', ['$http', '$scope', '$stateParams', '$ionicLoading', '
         };
 
         $scope.doPulling = function(e) {};
+
+        $scope.onRelease = function() {
+            // 修正 Scroll top 未超過 -60, Scroll 文字未消失
+            if ($ionicScrollDelegate.getScrollPosition().top > -60) {
+                $('.scroll-refresher').removeClass('js-scrolling').addClass('invisible');
+            }
+        };
     }
 ]);
 
