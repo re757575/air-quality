@@ -1,7 +1,7 @@
 {
-  "name": "my-ionic",
+  "name": "AirQuality",
   "version": "1.0.0",
-  "description": "my-ionic: An Ionic project",
+  "description": "AirQuality: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^1.3.3",

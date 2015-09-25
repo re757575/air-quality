@@ -59,9 +59,9 @@ app.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
             }
         }
     })
-    .state('weather', {
+    .state('air', {
         url: '/tab/home/:id',
-        templateUrl: 'templates/weather.html',
-        controller: 'weatherCtrl'
+        templateUrl: 'templates/air.html',
+        controller: 'airCtrl'
     });
 });
