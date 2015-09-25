@@ -1,1 +1,8 @@
-/* Empty. Add your own CSS if you like */
+/*
+	Fixed pull to refresh with native scrolling using card class lag
+	https://github.com/driftyco/ionic/issues/3835
+*/
+.card {
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
