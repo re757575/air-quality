@@ -23,5 +23,9 @@
   ],
   "cordovaPlatforms": [
     "android"
-  ]
+  ],
+  "scripts": {
+    "postinstall": "ionic state restore",
+    "clean": "ionic platform remove android; ionic platform remove ios; ionic platform remove browser; git checkout package.json"
+  }
 }
