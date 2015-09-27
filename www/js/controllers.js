@@ -1,20 +1,23 @@
 // Ionic Starter Controllers
 var app = angular.module('starter.controllers', []);
 
-app.controller('homeCtrl', function($scope, $location, $ionicTabsDelegate) {
-    $scope.citys = citys;
-    $scope.showWeather = function(index) {
-        $location.path('/tab/home/'+index);
-    };
+app.controller('homeCtrl', ['$scope', '$location', '$ionicTabsDelegate', 'PushProcessingService',
+    function($scope, $location, $ionicTabsDelegate, PushProcessingService) {
+      $scope.citys = citys;
+      $scope.showWeather = function(index) {
+          $location.path('/tab/home/'+index);
+      };
 
-    $scope.goSettings = function () {
-        var selected = $ionicTabsDelegate.selectedIndex();
-        if (selected != -1) {
-            $ionicTabsDelegate.select(selected + 1);
-        }
+      $scope.goSettings = function () {
+          var selected = $ionicTabsDelegate.selectedIndex();
+          if (selected != -1) {
+              $ionicTabsDelegate.select(selected + 1);
+          }
+      }
+console.log(location.host);
+      PushProcessingService.initialize();
     }
-
-});
+]);
 
 app.controller('settingsCtrl', function($scope, $stateParams, $ionicTabsDelegate) {
     $scope.citys = citys;
