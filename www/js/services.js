@@ -73,12 +73,13 @@ angular.module('starter.services', []).
 // http://intown.biz/2014/04/11/android-notifications/
 //factory for processing push notifications.
 angular.module('pushnotification', [])
-   .factory('PushProcessingService', function() {
+   .factory('PushProcessingService', ['$ionicCoreSettings', function($ionicCoreSettings) {
         function onDeviceReady() {
             console.info('NOTIFY  Device is ready.  Registering with GCM server');
             //register with google GCM server
             var pushNotification = window.plugins.pushNotification;
-            pushNotification.register(gcmSuccessHandler, gcmErrorHandler, {'senderID': _config_.senderID,'ecb':'onNotificationGCM'});
+            var gcm_key = $ionicCoreSettings.get('gcm_key'); // Your Project Number
+            pushNotification.register(gcmSuccessHandler, gcmErrorHandler, {'senderID': gcm_key,'ecb':'onNotificationGCM'});
         }
         function gcmSuccessHandler(result) {
             console.info('NOTIFY  pushNotification.register succeeded.  Result = '+result)
@@ -115,7 +116,7 @@ angular.module('pushnotification', [])
                 }
             }
         }
-    });
+    }]);
 
 // ALL GCM notifications come through here.
 function onNotificationGCM(e) {
