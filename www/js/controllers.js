@@ -14,7 +14,6 @@ app.controller('homeCtrl', ['$scope', '$location', '$ionicTabsDelegate', 'PushPr
               $ionicTabsDelegate.select(selected + 1);
           }
       }
-console.log(location.host);
       PushProcessingService.initialize();
     }
 ]);
