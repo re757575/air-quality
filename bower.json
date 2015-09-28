@@ -4,6 +4,7 @@
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.1.0",
     "jquery-1.9.1.min": "http://code.jquery.com/jquery-1.9.1.min.js",
-    "ionic-service-core": "~0.1.10"
+    "ionic-service-core": "~0.1.10",
+    "ngCordova": "~0.1.20-alpha"
   }
 }

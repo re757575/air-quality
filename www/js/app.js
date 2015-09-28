@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 var app = angular.module('starter', [
-      'ionic','ionic.service.core',
+      'ionic','ionic.service.core','ngCordova',
       'starter.controllers',
       'starter.services',
       'pushnotification'
