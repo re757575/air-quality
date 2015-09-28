@@ -78,7 +78,7 @@ angular.module('pushnotification', [])
             console.info('NOTIFY  Device is ready.  Registering with GCM server');
             //register with google GCM server
             var pushNotification = window.plugins.pushNotification;
-            pushNotification.register(gcmSuccessHandler, gcmErrorHandler, {'senderID': 'YOUR_PROJECT_NUMBER','ecb':'onNotificationGCM'});
+            pushNotification.register(gcmSuccessHandler, gcmErrorHandler, {'senderID': _config_.senderID,'ecb':'onNotificationGCM'});
         }
         function gcmSuccessHandler(result) {
             console.info('NOTIFY  pushNotification.register succeeded.  Result = '+result)
