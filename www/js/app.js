@@ -10,7 +10,7 @@ var app = angular.module('starter', [
       'pushnotification'
     ]);
 
-app.run(function($ionicPlatform) {
+app.run(function($rootScope, $ionicPlatform, $ionicHistory) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -35,6 +35,42 @@ app.run(function($ionicPlatform) {
     // ionic.Platform.exitApp();
 
   });
+
+  // 註冊返回鍵
+  $ionicPlatform.registerBackButtonAction(function(e) {
+    if ($rootScope.backButtonPressedOnceToExit) {
+      // 離開App
+      ionic.Platform.exitApp();
+    } else if ($ionicHistory.backView()) {
+      // 返回上一頁
+      $ionicHistory.goBack();
+      console.log('History Back');
+    } else {
+      // 提示再按一次退出,提示2秒
+      $rootScope.backButtonPressedOnceToExit = true;
+      // toast
+      window.plugins.toast.showWithOptions(
+        {
+          message: "再按一次退出",
+          duration: "short",
+          position: "bottom",
+          addPixelsY: -200  // added a negative value to move it up a bit (default 0)
+        },
+        function(a) {
+          console.log('toast success: ' + a);
+        },
+        function(b) {
+          console.log('toast error: ' + b);
+        }
+      );
+      setTimeout(function() {
+        $rootScope.backButtonPressedOnceToExit = false;
+      }, 2000);
+    }
+    e.preventDefault();
+    return false;
+  }, 101);
+
 });
 
 app.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
