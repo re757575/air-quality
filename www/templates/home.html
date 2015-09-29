@@ -2,7 +2,7 @@
     <ion-content on-swipe-left="goSettings()">
         <ion-list class="list">
             <ion-item class="item item-icon-left" ng-repeat="city in citys"
-                      ng-click="showWeather($index)"
+                      href="#/air/city/{{$index}}"
                       ng-show="city.on">
                 <i class="icon ion-ios-home-outline"></i>
                 {{city.name}}

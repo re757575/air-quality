@@ -101,7 +101,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
         }
     })
     .state('air', {
-        url: '/tab/home/:id',
+        url: '/air/city/:id',
         templateUrl: 'templates/air.html',
         controller: 'airCtrl'
     });

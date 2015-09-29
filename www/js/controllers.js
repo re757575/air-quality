@@ -4,9 +4,6 @@ var app = angular.module('starter.controllers', []);
 app.controller('homeCtrl', ['$scope', '$location', '$ionicTabsDelegate', 'PushProcessingService',
     function($scope, $location, $ionicTabsDelegate, PushProcessingService) {
       $scope.citys = citys;
-      $scope.showWeather = function(index) {
-          $location.path('/tab/home/'+index);
-      };
 
       $scope.goSettings = function () {
           var selected = $ionicTabsDelegate.selectedIndex();

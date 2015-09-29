@@ -30,7 +30,7 @@ angular.module('starter.services', []).
 
                 var url = encodeURI(service.url + paramStr);
 
-                $http.jsonp(url)
+                $http.jsonp(url, {timeout: def.promise})
                     .success(function (data, status, headers, config, statusText) {
 
                         var imageBaseUrl = 'img/face-icon/48/';
