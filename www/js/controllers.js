@@ -1,9 +1,16 @@
 // Ionic Starter Controllers
 var app = angular.module('starter.controllers', []);
 
-app.controller('homeCtrl', ['$scope', '$location', '$ionicTabsDelegate', 'PushProcessingService',
-    function($scope, $location, $ionicTabsDelegate, PushProcessingService) {
-      $scope.citys = citys;
+app.controller('homeCtrl', ['$scope', '$rootScope', '$location', '$ionicTabsDelegate', 'PushProcessingService', '$localstorage',
+    function($scope, $rootScope, $location, $ionicTabsDelegate, PushProcessingService, $localstorage) {
+
+      var storage_citys = $localstorage.getObject('citys');
+
+      if (Object.keys(storage_citys).length === 0) {
+          $rootScope.citys = citys;
+      } else {
+          $rootScope.citys = storage_citys;
+      }
 
       $scope.goSettings = function () {
           var selected = $ionicTabsDelegate.selectedIndex();
@@ -15,15 +22,18 @@ app.controller('homeCtrl', ['$scope', '$location', '$ionicTabsDelegate', 'PushPr
     }
 ]);
 
-app.controller('settingsCtrl', function($scope, $stateParams, $ionicTabsDelegate) {
-    $scope.citys = citys;
+app.controller('settingsCtrl', function($scope, $rootScope, $stateParams, $ionicTabsDelegate, $localstorage) {
+
+    $scope.change = function (citys) {
+        $localstorage.setObject('citys', $rootScope.citys);
+    };
 
     $scope.goHome = function () {
         var selected = $ionicTabsDelegate.selectedIndex();
         if (selected != -1 && selected != 0) {
             $ionicTabsDelegate.select(selected - 1);
         }
-    }
+    };
 });
 
 app.controller('airCtrl', ['$http', '$scope', '$stateParams', '$ionicLoading', '$ionicScrollDelegate', 'getDataService',
