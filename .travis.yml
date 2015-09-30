@@ -1,0 +1,35 @@
+language: android
+android:
+  components:
+  - platform-tools
+  - tools
+  - build-tools-22.0.0
+  - android-22
+sudo: false
+cache:
+    directories:
+        - node_modules
+        - src/lib
+env:
+before_install:
+- echo "Before install stage"
+install:
+- echo "Install stage"
+- npm install
+- export PATH=$(npm bin):$PATH
+- bower install
+before_script:
+- echo "Before script stage"
+script:
+- echo "Script stage"
+- gulp
+- mkdir -p resources/android/{splash,icon}
+- ionic resources --splash
+- ionic resources --icon
+- ionic build --release android
+after_success:
+
+after_failure:
+- echo "After failure stage"
+after_script:
+- echo "After script stage"
