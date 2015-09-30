@@ -26,9 +26,9 @@ script:
 - mkdir -p resources/android/{splash,icon}
 - ionic resources --splash
 - ionic resources --icon
-- ionic build --release android
+- ionic build android
 after_success:
-
+- echo "After success stage"
 after_failure:
 - echo "After failure stage"
 after_script:
