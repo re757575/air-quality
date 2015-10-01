@@ -31,7 +31,7 @@ before_install:
 #- git config --global user.email "re757575@gmail.com"
 install:
 - echo "Install stage"
-- npm -g install cordova ionic bower
+- npm -g install cordova ionic
 - npm install
 - export PATH=$(npm bin):$PATH
 - bower install
@@ -39,9 +39,9 @@ before_script:
 - echo "Before script stage"
 script:
 - echo "Script stage"
-- git config --global user.name "Alex.Dai (via Travis-CI)"
-- git config --global user.email "re757575@gmail.com"
-- git clone --quiet https://${GH_TOKEN}@github.com/re757575/my-ionic output > /dev/null
+#- git config --global user.name "Alex.Dai (via Travis-CI)"
+#- git config --global user.email "re757575@gmail.com"
+#- git clone --quiet https://${GH_TOKEN}@github.com/re757575/my-ionic output > /dev/null
 - gulp
 - mkdir -p resources/android/{splash,icon}
 - ionic resources --splash
@@ -49,6 +49,9 @@ script:
 - ionic build android
 after_success:
 - echo "After success stage"
+- bash ./.push-release.sh
+- export PATH=$(find /usr/local/android-sdk/ -name zipalign -type f| head -1 | sed -e 's/\/zipalign//g'):$PATH
+- zipalign -v 4 platforms/android/build/outputs/apk/android-debug.apk platforms/android/build/outputs/apk/android-test.apk
 #- cd output
 #- git add .
 #- git commit -m "[ci skip] Update output from Travis CI"
@@ -58,3 +61,12 @@ after_failure:
 - echo "After failure stage"
 after_script:
 - echo "After script stage"
+deploy:
+  provider: releases
+  api_key: ${GH_TOKEN}
+  file: platforms/android/build/outputs/apk/android-test.apk
+  on:
+    tags: true
+    all_branches: true
+after_deploy:
+  - echo "After deploy stage"
