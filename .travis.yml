@@ -7,10 +7,18 @@ android:
   - android-22
 sudo: false
 cache:
-    directories:
-        - node_modules
-        - src/lib
+  directories:
+  - node_modules
+  - src/lib
+notifications:
+  email: false
 env:
+  global:
+  - ADB_INSTALL_TIMEOUT=8
+  - secure: aFqFFaiXVdIlZFInyXI/nDbn2dTze2imyacL9FqdKS9J2VwIgj67n0H5TUXwuM/UxwkjE4T78J2bmzg0Z6MSsP+pPtE9yBrla/AQA5+dEdB06VWXrH9fhrGt2KjmDSjF+y7mTUtjjw5LGN5dX4isho+vL8r2NQAQBlWjmZbQJJ/uZ9u6J6Ma2KNdf7V7FEl2Vb0S4gDKOht0x0VmpYwdd/CJd1fMchHacVRU8uceRJXvYGZDiBfbsJ3dzCBiImykGYaPoBxUO4JbVGLavhj8Q8rw1Dl+fx0LPW37+XI/Z9NTvizHAQEjsduSD+YemtkiBmSk7Mvh1+cqaMuVApZzJC9aM6vMUQXKKA0tE3j/dXmgjJHPblhTVwFjzcqq/dyg9TEI8eqdoBtbvM340evlVoC66J9zBpZYg0qXw8hN+OYNoVb9i/iJHhENTOjn2Fyf1Z+vJN+sFNVS3UOk3OEz81CDeYo+VQX7Z1q0Zq9vyh5FYnqO+YBODl2lenTTmPsujLNuwoWMtB4ee1NRtJAfCdoHwyOOiuxjBZ/bWZM1jKgtzFuJ+JYdVYS5At2eLZjR3B5DxIjre4qy9oPsEu1ldhO6htCrBjmlDHIj7jAeXTO2opaR9DcxycxrewWJurNYf01TnB9abBRIrrA0z+s/gjk3yeusfwBflcI5r+/9L5A=
+branches:
+  only:
+    - master
 before_install:
 - echo "Before install stage"
 install:
@@ -22,6 +30,9 @@ before_script:
 - echo "Before script stage"
 script:
 - echo "Script stage"
+- git config --global user.name "Alex.Dai (via Travis-CI)"
+- git config --global user.email "re757575@gmail.com"
+- git clone --quiet https://${GH_TOKEN}@github.com/re757575/my-ionic output > /dev/null
 - gulp
 - mkdir -p resources/android/{splash,icon}
 - ionic resources --splash
@@ -29,7 +40,15 @@ script:
 - ionic build android
 after_success:
 - echo "After success stage"
+- cd output
+- git pull origin travis-ci
+- git add .
+- git commit -m "[ci skip] Update output from Travis CI"
+- git checkout -b travis-ci
+- git push -u --quiet origin travis-ci
 after_failure:
 - echo "After failure stage"
 after_script:
 - echo "After script stage"
+lure:
+- echo "After failure stage"
