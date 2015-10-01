@@ -53,7 +53,7 @@ after_success:
 #- git add .
 #- git commit -m "[ci skip] Update output from Travis CI"
 #- git checkout -b travis-ci
-#- git push --quiet origin travis-ci
+#- git push --force --quiet origin travis-ci > /dev/null 2>&1
 after_failure:
 - echo "After failure stage"
 after_script:
