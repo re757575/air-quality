@@ -49,11 +49,11 @@ script:
 - ionic build android
 after_success:
 - echo "After success stage"
-- cd output
-- git add .
-- git commit -m "[ci skip] Update output from Travis CI"
-- git checkout -b travis-ci
-- git push --quiet origin travis-ci
+#- cd output
+#- git add .
+#- git commit -m "[ci skip] Update output from Travis CI"
+#- git checkout -b travis-ci
+#- git push --quiet origin travis-ci
 after_failure:
 - echo "After failure stage"
 after_script:
