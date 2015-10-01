@@ -31,6 +31,7 @@ before_install:
 #- git config --global user.email "re757575@gmail.com"
 install:
 - echo "Install stage"
+- npm -g install cordova ionic bower
 - npm install
 - export PATH=$(npm bin):$PATH
 - bower install
