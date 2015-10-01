@@ -15,6 +15,7 @@ notifications:
 env:
   global:
   - ADB_INSTALL_TIMEOUT=8
+  - secure: lDCAM01AJ+pn2Ypdpd7av4IMrMYxDIeZjHXpGS7ZS8tVfRmjZtK457D721yBEWSdY+Uqn6Xb9K/Qfxl6UQ4TY7CqojWGt2zyLf75H1Un5IptRLMik0sBnN/x90UbrwimWZcyR3FpnAkq1dRsdS0Tee0jHEt7fBpG3rd2+bVWjJsAm071BSxLpPdwTExOMr2zDsetKEKwV5IoCxRVdyon42zbkwp6lj7PVhE0NnciOMmtpp+jTKDNJ+aaPtAsRu55700Iw9daTdNaLdYZXM30BUj1vf+xtuVpyEU2S7xeBKpM5qNhUlIp2mGSb/EFvoTM2uIKxdh7O2hOxU3ANJAD9p5SWOOjd+V0YPzA34PhxwssPWO30j7n8KbReGwtFGW8hees435TkweGQT1Bg/FmzKSqr9cTKNs00HX1f1a7gX2wIxEMOqWJPllFdOuMrMHlZj5hYpYJ8I63ba0aUi7QzzGoRn72yrNUs+IcishFQ+M5VbhP6IldR51GhVOeL8I7FRvZjRxIL6CRV5djeid8UGCGPy6Ev0yDaDM4cOMDmVmigkLhPjcUUQT6uncbVY2iXzA+Q/TUVJildrtRcMjXJNGmjvCMbnq5VbuYK342G5xOWJ36EDF0n9GBJNZrOYajTZu98BPjMMPMGmenozugBqY580cIdLKmBhAqztqoTDQ=
 branches:
   only:
   - master
@@ -53,5 +54,3 @@ after_failure:
 - echo "After failure stage"
 after_script:
 - echo "After script stage"
-lure:
-- echo "After failure stage"
