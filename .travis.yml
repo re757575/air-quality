@@ -22,7 +22,7 @@ env:
 before_install:
 - echo "Before install stage"
 # apk release-key.keystore
-- openssl aes-256-cbc -K $encrypted_35ace1cd183b_key -iv $encrypted_35ace1cd183b_iv -in my-release-key.keystore.enc -out my-release-key.keystore -d
+- openssl aes-256-cbc -K $encrypted_35ace1cd183b_key -iv $encrypted_35ace1cd183b_iv -in air-quality-key.keystore.enc -out air-quality-key.keystore -d
 
 # SSH Login
 #- openssl aes-256-cbc -K $encrypted_fc0dffcf456c_key -iv $encrypted_fc0dffcf456c_iv
@@ -56,9 +56,9 @@ script:
 after_success:
 - echo "After success stage"
 - bash ./.push-release.sh
-- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk -storepass $STOREPASS
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore air-quality-key.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk -storepass $STOREPASS
 - export PATH=$(find /usr/local/android-sdk/ -name zipalign -type f| head -1 | sed -e 's/\/zipalign//g'):$PATH
-- zipalign -v 4 platforms/android/build/outputs/apk/android-release-unsigned.apk platforms/android/build/outputs/apk/android-release.apk
+- zipalign -v 4 platforms/android/build/outputs/apk/android-release-unsigned.apk platforms/android/build/outputs/apk/air-quality.apk
 #- cd output
 #- git add .
 #- git commit -m "[ci skip] Update output from Travis CI"
@@ -71,7 +71,7 @@ after_script:
 deploy:
   provider: releases
   api_key: "${GH_TOKEN}"
-  file: platforms/android/build/outputs/apk/android-release.apk
+  file: platforms/android/build/outputs/apk/air-quality.apk
   on:
     tags: true
     all_branches: true
