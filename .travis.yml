@@ -46,6 +46,7 @@ install:
 - bower install
 before_script:
 - echo "Before script stage"
+- chmod +x hooks/after_prepare/010_add_platform_class.js
 script:
 - echo "Script stage"
 #- git config --global user.name "Alex.Dai (via Travis-CI)"
