@@ -9,7 +9,7 @@ sudo: false
 cache:
   directories:
   - node_modules
-  - src/lib
+  - www/lib
 notifications:
   email: false
 env:
