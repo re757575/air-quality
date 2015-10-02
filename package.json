@@ -1,6 +1,6 @@
 {
   "name": "AirQuality",
-  "version": "1.0.0",
+  "version": "0.1.$VERSIONCODE",
   "description": "AirQuality: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",

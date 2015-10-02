@@ -28,6 +28,8 @@ before_install:
 #- git config --global user.email "re757575@gmail.com"
 install:
 - echo "Install stage"
+- sed -i -e "s/\$VERSIONCODE/$TRAVIS_BUILD_NUMBER/g" config.xml
+- sed -i -e "s/\$VERSIONCODE/$TRAVIS_BUILD_NUMBER/g" package.json
 - npm -g install cordova ionic
 - npm install
 - export PATH=$(npm bin):$PATH
