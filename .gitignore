@@ -4,4 +4,22 @@
 node_modules/
 platforms/
 plugins/
-config.js
+.tmp/
+
+### Node ###
+# Logs
+logs
+*.log
+
+### Windows ###
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride
