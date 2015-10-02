@@ -50,7 +50,7 @@ script:
 - echo "Script stage"
 #- git config --global user.name "Alex.Dai (via Travis-CI)"
 #- git config --global user.email "re757575@gmail.com"
-#- git clone --quiet https://${GH_TOKEN}@github.com/re757575/my-ionic output > /dev/null
+#- git clone --quiet https://${GH_TOKEN}@github.com/re757575/air-quality output > /dev/null
 - gulp
 - mkdir -p resources/android/{splash,icon}
 - ionic resources --splash
