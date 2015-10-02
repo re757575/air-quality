@@ -15,9 +15,16 @@ notifications:
 env:
   global:
   - ADB_INSTALL_TIMEOUT=8
+  # GH_TOKEN
   - secure: aFqFFaiXVdIlZFInyXI/nDbn2dTze2imyacL9FqdKS9J2VwIgj67n0H5TUXwuM/UxwkjE4T78J2bmzg0Z6MSsP+pPtE9yBrla/AQA5+dEdB06VWXrH9fhrGt2KjmDSjF+y7mTUtjjw5LGN5dX4isho+vL8r2NQAQBlWjmZbQJJ/uZ9u6J6Ma2KNdf7V7FEl2Vb0S4gDKOht0x0VmpYwdd/CJd1fMchHacVRU8uceRJXvYGZDiBfbsJ3dzCBiImykGYaPoBxUO4JbVGLavhj8Q8rw1Dl+fx0LPW37+XI/Z9NTvizHAQEjsduSD+YemtkiBmSk7Mvh1+cqaMuVApZzJC9aM6vMUQXKKA0tE3j/dXmgjJHPblhTVwFjzcqq/dyg9TEI8eqdoBtbvM340evlVoC66J9zBpZYg0qXw8hN+OYNoVb9i/iJHhENTOjn2Fyf1Z+vJN+sFNVS3UOk3OEz81CDeYo+VQX7Z1q0Zq9vyh5FYnqO+YBODl2lenTTmPsujLNuwoWMtB4ee1NRtJAfCdoHwyOOiuxjBZ/bWZM1jKgtzFuJ+JYdVYS5At2eLZjR3B5DxIjre4qy9oPsEu1ldhO6htCrBjmlDHIj7jAeXTO2opaR9DcxycxrewWJurNYf01TnB9abBRIrrA0z+s/gjk3yeusfwBflcI5r+/9L5A=
+  # STOREPASS
+  - secure: hdRyszIJhXBqvx6q0B5ncmIC89yqGDWfD6gyI5sLyCugx67RE7xSWMC2EVfRs7dIKfxmy+B08VRT+745Kr0Zeh1VFfHg6ys4QXToaZLOVc3pYB5RXKZ6Vi1E41R+7sshIFJEdCCuQ38L/AYkLdDkNstiMInQ4RxbwmU148t3c3/9/k2RGuIhDxRF5z40+JtLNhjLC2+nh3ErR6GKH1D2d9D8YQ6vhzI7TLAZKYsvOcat8TOamCPweTGTgEhzFA8HOCKgGrL/5TK8ppivggH2abjkIacXYLGfkaIL8YR3Ho33831Q2unDUMeDElGv1JjfaSgLngqgnDi0ReUaAi89sVlSyd9Loh0E1H+82MLDwthEYCWpFTLBbkIoW/i9i/GXO6oAKKXlh7ghwZ310/O7saiZ2FqsOLDJKxLtsMak/ElbWOgjqeyr3itO85HOHRCNdoKWjnVadmOiODfS4zesNddTeLG3nfnrj48wuX5Rt0D4EUA/9278NUwyJ9mpZxwYkcS+VxMxD/3IlELKMEA1azGGNkNfth3DITN7XnsRa/3tAOODwVJFOKm6grNW99yVNjTpTo1LnOK4nmCjD7qhVlh7qiTP/28BukZ06kdCbAg77WU/y/KTA6tQH3lFILvQ5JLdHeDV/Qc9EbvY2kQQFfxwYMtYYzKrI9QlO9CtTmw=
 before_install:
 - echo "Before install stage"
+# apk release-key.keystore
+- openssl aes-256-cbc -K $encrypted_35ace1cd183b_key -iv $encrypted_35ace1cd183b_iv -in my-release-key.keystore.enc -out my-release-key.keystore -d
+
+# SSH Login
 #- openssl aes-256-cbc -K $encrypted_fc0dffcf456c_key -iv $encrypted_fc0dffcf456c_iv
 #  -in .travis/travis_ssh_key.enc -out ~/.ssh/id_rsa -d
 #- chmod 600 ~/.ssh/id_rsa
@@ -45,12 +52,13 @@ script:
 - mkdir -p resources/android/{splash,icon}
 - ionic resources --splash
 - ionic resources --icon
-- ionic build android
+- ionic build --release android
 after_success:
 - echo "After success stage"
 - bash ./.push-release.sh
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk -storepass $STOREPASS
 - export PATH=$(find /usr/local/android-sdk/ -name zipalign -type f| head -1 | sed -e 's/\/zipalign//g'):$PATH
-- zipalign -v 4 platforms/android/build/outputs/apk/android-debug.apk platforms/android/build/outputs/apk/android-test.apk
+- zipalign -v 4 platforms/android/build/outputs/apk/android-release-unsigned.apk platforms/android/build/outputs/apk/android-release.apk
 #- cd output
 #- git add .
 #- git commit -m "[ci skip] Update output from Travis CI"
@@ -62,8 +70,8 @@ after_script:
 - echo "After script stage"
 deploy:
   provider: releases
-  api_key: ${GH_TOKEN}
-  file: platforms/android/build/outputs/apk/android-test.apk
+  api_key: "${GH_TOKEN}"
+  file: platforms/android/build/outputs/apk/android-release.apk
   on:
     tags: true
     all_branches: true
