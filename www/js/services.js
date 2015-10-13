@@ -166,8 +166,10 @@ function onNotificationGCM(e) {
 
                 // if the notification contains a soundname, play it.
                 var my_media = new Media('/android_asset/www/sound/'+ e.soundname);
-                my_media.play();
-                alert(e.payload.message);
+
+                // 多次註冊 reg_id 程式前景將會重複執行
+                // my_media.play();
+                // alert(e.payload.message);
             }
             else
             {
@@ -178,7 +180,7 @@ function onNotificationGCM(e) {
                     console.log('--BACKGROUND NOTIFICATION--' + '');
 
                 // direct user here:
-                window.location = '#/tab/featured';
+                window.location = '#/air/city/1';
             }
             console.log('MESSAGE -> MSG: ' + e.payload.message + '');
             console.log('MESSAGE: '+ JSON.stringify(e.payload));
