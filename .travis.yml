@@ -76,6 +76,7 @@ deploy:
   provider: releases
   api_key: "${GH_TOKEN}"
   file: platforms/android/build/outputs/apk/air-quality.apk
+  skip_cleanup: true
   on:
     tags: true
     all_branches: true
