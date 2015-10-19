@@ -91,7 +91,7 @@ angular.module('ionic.utils', [])
 // http://intown.biz/2014/04/11/android-notifications/
 //factory for processing push notifications.
 angular.module('pushnotification', [])
-   .factory('PushProcessingService', ['$http', '$ionicCoreSettings', 'getConfig', function($http, $ionicCoreSettings, getConfig) {
+   .factory('PushProcessingService', ['$rootScope', '$http', '$ionicCoreSettings', 'getConfig', function($rootScope, $http, $ionicCoreSettings, getConfig) {
 
         var _config = getConfig; // private setting
 
@@ -120,7 +120,8 @@ angular.module('pushnotification', [])
                 var param = {
                     'project_name_number': 'AirQuality-App_789761614675',
                     'reg_id': id,
-                    'callback': 'JSON_CALLBACK'
+                    'callback': 'JSON_CALLBACK',
+                    'deviceInfo': JSON.stringify($rootScope.deviceInfo)
                 }
 
                 var paramStr = Object.keys(param).map(function(key) {

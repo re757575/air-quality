@@ -14,7 +14,14 @@ var app = angular.module('starter', [
       'pushnotification'
     ]);
 
-app.run(function($rootScope, $ionicPlatform, $ionicHistory) {
+app.run(function($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice) {
+
+  document.addEventListener("deviceready", function () {
+    console.info('deviceready');
+    // Get all device information.
+    $rootScope.deviceInfo = $cordovaDevice.getDevice();
+  }, false);
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
