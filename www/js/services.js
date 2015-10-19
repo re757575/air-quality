@@ -94,12 +94,12 @@ angular.module('pushnotification', [])
    .factory('PushProcessingService', ['$rootScope', '$http', '$ionicCoreSettings', 'getConfig', function($rootScope, $http, $ionicCoreSettings, getConfig) {
 
         var _config = getConfig; // private setting
+        var gcm_key = $ionicCoreSettings.get('gcm_key'); // Your Project Number
 
         function onDeviceReady() {
             console.info('NOTIFY  Device is ready.  Registering with GCM server');
             //register with google GCM server
             var pushNotification = window.plugins.pushNotification;
-            var gcm_key = $ionicCoreSettings.get('gcm_key'); // Your Project Number
             pushNotification.register(gcmSuccessHandler, gcmErrorHandler, {'senderID': gcm_key,'ecb':'onNotificationGCM'});
         }
         function gcmSuccessHandler(result) {
@@ -118,7 +118,7 @@ angular.module('pushnotification', [])
                 console.log('registerID to App Server');
 
                 var param = {
-                    'project_name_number': 'AirQuality-App_789761614675',
+                    'project_name_number': _config.APP_PROJECT_NAME +'-'+ gcm_key,
                     'reg_id': id,
                     'callback': 'JSON_CALLBACK',
                     'deviceInfo': JSON.stringify($rootScope.deviceInfo)
