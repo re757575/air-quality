@@ -91,7 +91,7 @@ angular.module('ionic.utils', [])
 // http://intown.biz/2014/04/11/android-notifications/
 //factory for processing push notifications.
 angular.module('pushnotification', [])
-   .factory('PushProcessingService', ['$ionicCoreSettings', function($ionicCoreSettings) {
+   .factory('PushProcessingService', ['$http', '$ionicCoreSettings', function($http, $ionicCoreSettings) {
         function onDeviceReady() {
             console.info('NOTIFY  Device is ready.  Registering with GCM server');
             //register with google GCM server
@@ -111,20 +111,29 @@ angular.module('pushnotification', [])
                 document.addEventListener('deviceready', onDeviceReady, false);
             },
             registerID : function (id) {
-                // DOTO:
-                //Insert code here to store the user's ID on your notification server.
-                //You'll probably have a web service (wrapped in an Angular service of course) set up for this.
-                //For example:
-                // MyService.registerNotificationID(id).then(function(response){
-                //     if (response.data.Result) {
-                //         console.info('NOTIFY  Registration succeeded');
-                //     } else {
-                //         console.error('NOTIFY  Registration failed');
-                //     }
-                // });
+                // Insert code here to store the user's ID on your notification server.
+                console.log('registerID to App Server');
+
+                var param = {
+                    'project_name_number': 'AirQuality-App_789761614675',
+                    'reg_id': id,
+                    'callback': 'JSON_CALLBACK'
+                }
+
+                var paramStr = Object.keys(param).map(function(key) {
+                    return key + '=' + param[key];
+                }).join('&');
+
+                var url = 'YOUR_APP_SERVER_URL' + paramStr;
+
+                $http.jsonp(url, param).success(function(data) {
+                    console.log(data);
+                });
+
             },
             //unregister can be called from a settings area.
             unregister : function () {
+                // DOTO
                 console.info('unregister')
                 var push = window.plugins.pushNotification;
                 if (push) {
