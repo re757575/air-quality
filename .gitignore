@@ -6,6 +6,9 @@ platforms/
 plugins/
 .tmp/
 
+# private setting
+/www/js/config.js
+
 ### Node ###
 # Logs
 logs

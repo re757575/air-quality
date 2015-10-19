@@ -10,6 +10,7 @@ var app = angular.module('starter', [
       'ngCordova',
       'starter.controllers',
       'starter.services',
+      'starter.config',
       'pushnotification'
     ]);
 

@@ -91,7 +91,10 @@ angular.module('ionic.utils', [])
 // http://intown.biz/2014/04/11/android-notifications/
 //factory for processing push notifications.
 angular.module('pushnotification', [])
-   .factory('PushProcessingService', ['$http', '$ionicCoreSettings', function($http, $ionicCoreSettings) {
+   .factory('PushProcessingService', ['$http', '$ionicCoreSettings', 'getConfig', function($http, $ionicCoreSettings, getConfig) {
+
+        var _config = getConfig; // private setting
+
         function onDeviceReady() {
             console.info('NOTIFY  Device is ready.  Registering with GCM server');
             //register with google GCM server
@@ -124,7 +127,7 @@ angular.module('pushnotification', [])
                     return key + '=' + param[key];
                 }).join('&');
 
-                var url = 'YOUR_APP_SERVER_URL' + paramStr;
+                var url = _config.APP_SERVER_URL + paramStr;
 
                 $http.jsonp(url, param).success(function(data) {
                     console.log(data);
