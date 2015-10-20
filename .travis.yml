@@ -19,6 +19,10 @@ env:
   - secure: aFqFFaiXVdIlZFInyXI/nDbn2dTze2imyacL9FqdKS9J2VwIgj67n0H5TUXwuM/UxwkjE4T78J2bmzg0Z6MSsP+pPtE9yBrla/AQA5+dEdB06VWXrH9fhrGt2KjmDSjF+y7mTUtjjw5LGN5dX4isho+vL8r2NQAQBlWjmZbQJJ/uZ9u6J6Ma2KNdf7V7FEl2Vb0S4gDKOht0x0VmpYwdd/CJd1fMchHacVRU8uceRJXvYGZDiBfbsJ3dzCBiImykGYaPoBxUO4JbVGLavhj8Q8rw1Dl+fx0LPW37+XI/Z9NTvizHAQEjsduSD+YemtkiBmSk7Mvh1+cqaMuVApZzJC9aM6vMUQXKKA0tE3j/dXmgjJHPblhTVwFjzcqq/dyg9TEI8eqdoBtbvM340evlVoC66J9zBpZYg0qXw8hN+OYNoVb9i/iJHhENTOjn2Fyf1Z+vJN+sFNVS3UOk3OEz81CDeYo+VQX7Z1q0Zq9vyh5FYnqO+YBODl2lenTTmPsujLNuwoWMtB4ee1NRtJAfCdoHwyOOiuxjBZ/bWZM1jKgtzFuJ+JYdVYS5At2eLZjR3B5DxIjre4qy9oPsEu1ldhO6htCrBjmlDHIj7jAeXTO2opaR9DcxycxrewWJurNYf01TnB9abBRIrrA0z+s/gjk3yeusfwBflcI5r+/9L5A=
   # STOREPASS
   - secure: hdRyszIJhXBqvx6q0B5ncmIC89yqGDWfD6gyI5sLyCugx67RE7xSWMC2EVfRs7dIKfxmy+B08VRT+745Kr0Zeh1VFfHg6ys4QXToaZLOVc3pYB5RXKZ6Vi1E41R+7sshIFJEdCCuQ38L/AYkLdDkNstiMInQ4RxbwmU148t3c3/9/k2RGuIhDxRF5z40+JtLNhjLC2+nh3ErR6GKH1D2d9D8YQ6vhzI7TLAZKYsvOcat8TOamCPweTGTgEhzFA8HOCKgGrL/5TK8ppivggH2abjkIacXYLGfkaIL8YR3Ho33831Q2unDUMeDElGv1JjfaSgLngqgnDi0ReUaAi89sVlSyd9Loh0E1H+82MLDwthEYCWpFTLBbkIoW/i9i/GXO6oAKKXlh7ghwZ310/O7saiZ2FqsOLDJKxLtsMak/ElbWOgjqeyr3itO85HOHRCNdoKWjnVadmOiODfS4zesNddTeLG3nfnrj48wuX5Rt0D4EUA/9278NUwyJ9mpZxwYkcS+VxMxD/3IlELKMEA1azGGNkNfth3DITN7XnsRa/3tAOODwVJFOKm6grNW99yVNjTpTo1LnOK4nmCjD7qhVlh7qiTP/28BukZ06kdCbAg77WU/y/KTA6tQH3lFILvQ5JLdHeDV/Qc9EbvY2kQQFfxwYMtYYzKrI9QlO9CtTmw=
+  # APP_SERVER_URL => $ travis encrypt APP_SERVER_URL="'https:\/\/yourserver.com\/app?'", 因為 sed 指令故 '/' 前面需加 反斜線 '\'
+  - secure: QW7sC4FFT2HTN6TpN0aijbtnxvOyi++oC+aG/hDQTtorllExfIYRPL4qrKQJ71Yk0Mrrmc6jXSFSYW3yUIvHqA4xDuy8pZ5qF02sHbe+pJ1/2mlYQ1PZBbmlNzJu2slR39Nt5gc+J5Vyttuek0lPr0PONakc36Lf/MqHJBWqsRhXPaMroQ1KCJUcg32235UL62Fo4MzITPrmYH921BTyCPkWI6dRHCK91LJkNH+QU26peD1Bq5XR4INU/WHYPzREZ2RGplo9qm2BFINawAJUCq4qzrO1bgxFetwpfMKmwNRBykUgG2h2nKPL+EcE2nifuzYn/TbLDj+iN4FZUHq4KdIdeKiw/qtDkXL9LEI5ojgWfXUYMXAOVMuBORbJFzZovylRYk72L9WW+eGtI5R3UIcaGcVJJyTIVPZF/gPiMhNQn4e+M4+Ozs78mxo1zMTuqQXHfyRWvb2LAn8VHVhbMB5Si4W3aoa8t4WXo8cETVWeALhPIk3+V1m5E1Affl+B2bNYsk51EyYHIERXCEJP+d65+oHeEIZ0Oy4Q014o3zDcz3MXIg2+YGYzt4eLCESHSH2TV4robVhRhm36smJbUKodOLZ1klUHtYoM0NmkxTaBZQ7ZdA8l8ZXjffQFV+2JPc69tO/0rsbLnykqABA53CQUdagC2YaovLLudZYc7yk=
+  # APP_PROJECT_NAME
+  - secure: PFb5d7YedTrjCNe0E3AVUDfnfxHptCNB3ZQP/c+THwMcj4dPw5E2C0FjcZxPKucIaLMerX/lip0+y+yqt4wXtv8uK8miWtFrg2cgwnmPkpX1b33MXU2rlRPoZQifNbETgneLynXQvFb2M3C9zd/uHpNXQSi28Ng0a9qCm/9wHTch0qLX7pO2LB+uRiRWtOAhM/6K6Jx1skvf/5RWo/Y38lIFVelHvb1dqXJAAqIeAyWyoNrWQuK5Tf8lFtCtFK8/B7ySsBSxu9kMdcrG/DWt92T9FiY1Pio2ht09Nm9l0U2MEXgBsD8IIi5F/OMl2CNp9akcHKrJdayBuroH0qJLBGNugOOUe6APsXuMFA/IZgkocvpgb0LzQdeVzcCApd2pIjMk6inaK+ZOef+ed++l8MYicqmhZgK/XVJIAGsV5Q1dnhpms8yViS7nTeJloNZrR1r+F20iKQmdOW7xuEyPnLTNoPBaNak0tjCJUDR81z73tQqLtO86ncsX2blNc9fCXEswjZW7tS0RFDNljpPVZmp4oF1n502JvVeL/aw2QaVsPLKjvUxV810opGLPhoeSrOPz1oabcWHGvLo7pYiP6JZaqUqpEksuZMyF1zP1s2ArWUibePGsXPzpY4EyzhruNM3jYnbtNLcHB24qcSQggYkSkGHTL1qwXeJ5mIoPgNI=
 before_install:
 - echo "Before install stage"
 # set node & npm version
@@ -40,6 +44,8 @@ install:
 - echo "Install stage"
 - sed -i -e "s/\$VERSIONCODE/$TRAVIS_BUILD_NUMBER/g" config.xml
 - sed -i -e "s/\$VERSIONCODE/$TRAVIS_BUILD_NUMBER/g" package.json
+#- sed -i -e "s/\_config.APP_SERVER_URL/$APP_SERVER_URL/g" www/js/services.js
+#- sed -i -e "s/\_config.APP_PROJECT_NAME/$APP_PROJECT_NAME/g" www/js/services.js
 - npm -g install cordova ionic
 - travis_retry npm install
 - export PATH=$(npm bin):$PATH
