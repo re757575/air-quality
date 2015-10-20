@@ -60,9 +60,9 @@ script:
 after_success:
 - echo "After success stage"
 - bash ./.push-release.sh
-- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore air-quality-key.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk -storepass $STOREPASS
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore air-quality-key.keystore -signedjar platforms/android/build/outputs/apk/android-release-signed.apk platforms/android/build/outputs/apk/android-release-unsigned.apk alias_name -storepass $STOREPASS
 - export PATH=$(find /usr/local/android-sdk/ -name zipalign -type f| head -1 | sed -e 's/\/zipalign//g'):$PATH
-- zipalign -v 4 platforms/android/build/outputs/apk/android-release-unsigned.apk platforms/android/build/outputs/apk/air-quality.apk
+- zipalign -v 4 platforms/android/build/outputs/apk/android-release-signed.apk platforms/android/build/outputs/apk/air-quality.apk
 #- cd output
 #- git add .
 #- git commit -m "[ci skip] Update output from Travis CI"
