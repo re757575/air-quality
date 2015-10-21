@@ -29,7 +29,8 @@ before_install:
 - nvm install 0.12.7
 - nvm use 0.12.7
 # apk release-key.keystore
-- openssl aes-256-cbc -K $encrypted_35ace1cd183b_key -iv $encrypted_35ace1cd183b_iv -in air-quality-key.keystore.enc -out air-quality-key.keystore -d
+#- openssl aes-256-cbc -K $encrypted_35ace1cd183b_key -iv $encrypted_35ace1cd183b_iv -in air-quality-key.keystore.enc -out air-quality-key.keystore -d
+# www/js/config.js
 
 # SSH Login
 #- openssl aes-256-cbc -K $encrypted_fc0dffcf456c_key -iv $encrypted_fc0dffcf456c_iv

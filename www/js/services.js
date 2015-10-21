@@ -118,7 +118,7 @@ angular.module('pushnotification', [])
                 console.log('registerID to App Server');
 
                 var param = {
-                    'project_name_number': '_config.APP_PROJECT_NAME' +'-'+ gcm_key,
+                    'project_name_number': _config.APP_PROJECT_NAME +'-'+ gcm_key,
                     'reg_id': id,
                     'callback': 'JSON_CALLBACK',
                     'deviceInfo': JSON.stringify($rootScope.deviceInfo)
@@ -128,7 +128,7 @@ angular.module('pushnotification', [])
                     return key + '=' + param[key];
                 }).join('&');
 
-                var url = '_config.APP_SERVER_URL' + paramStr;
+                var url = _config.APP_SERVER_URL + paramStr;
 
                 $http.jsonp(url, param).success(function(data) {
                     console.log(data);
