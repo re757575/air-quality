@@ -115,5 +115,15 @@ app.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
         url: '/air/city/:id',
         templateUrl: 'templates/air.html',
         controller: 'airCtrl'
+    })
+    .state('setting-notifications', {
+        url: '/setting-notifications',
+        templateUrl: 'templates/setting-notifications.html',
+        controller: 'settingsNotificationsCtrl'
+    })
+    .state('setting-city', {
+        url: '/setting-city',
+        templateUrl: 'templates/setting-city.html',
+        controller: 'settingsCityCtrl'
     });
 });

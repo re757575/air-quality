@@ -1,15 +1,17 @@
-<ion-view title="城市列表">
+<ion-view title="設定">
     <ion-content on-swipe-right="goHome()">
         <ion-list>
-            <ion-item class="item item-toggle" ng-repeat="city in citys">
-                {{city.name}}
-                <label class="toggle toggle-assertive">
-                    <input type="checkbox" ng-model="city.on" ng-change="change()">
-                    <div class="track">
-                        <div class="handle"></div>
-                    </div>
-                </label>
-            </ion-item>
+              <a class="item item-icon-left" href="#/setting-notifications">
+                <i class="icon ion-android-notifications"></i>
+                通知設定
+              </a>
+              <a class="item item-icon-left" href="#/setting-city">
+                <i class="icon ion-location"></i>
+                城市列表
+                <span class="item-note">
+                  設定關注
+                </span>
+              </a>
         </ion-list>
     </ion-content>
 </ion-view>

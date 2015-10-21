@@ -91,7 +91,8 @@ angular.module('ionic.utils', [])
 // http://intown.biz/2014/04/11/android-notifications/
 //factory for processing push notifications.
 angular.module('pushnotification', [])
-   .factory('PushProcessingService', ['$rootScope', '$http', '$ionicCoreSettings', 'getConfig', function($rootScope, $http, $ionicCoreSettings, getConfig) {
+   .factory('PushProcessingService', ['$rootScope', '$http', '$ionicCoreSettings', 'getConfig', '$localstorage',
+    function($rootScope, $http, $ionicCoreSettings, getConfig, $localstorage) {
 
         var _config = getConfig; // private setting
         var gcm_key = $ionicCoreSettings.get('gcm_key'); // Your Project Number
@@ -120,6 +121,7 @@ angular.module('pushnotification', [])
                 var param = {
                     'project_name_number': _config.APP_PROJECT_NAME +'-'+ gcm_key,
                     'reg_id': id,
+                    'action': 'registerID',
                     'callback': 'JSON_CALLBACK',
                     'deviceInfo': JSON.stringify($rootScope.deviceInfo)
                 }
@@ -134,17 +136,29 @@ angular.module('pushnotification', [])
                     console.log(data);
                 });
 
+                $localstorage.set('reg_id', id);
+                console.log('localstorage set reg_id:'+ id);
             },
-            //unregister can be called from a settings area.
-            unregister : function () {
-                // DOTO
-                console.info('unregister')
-                var push = window.plugins.pushNotification;
-                if (push) {
-                    push.unregister(function () {
-                        console.info('unregister success')
-                    });
+            unregisterID : function (id) {
+
+                console.info('unregisterID to App Server')
+
+                var param = {
+                    'reg_id': id,
+                    'action': 'unregisterID',
+                    'callback': 'JSON_CALLBACK',
                 }
+
+                var paramStr = Object.keys(param).map(function(key) {
+                    return key + '=' + param[key];
+                }).join('&');
+
+                var url = _config.APP_SERVER_URL + paramStr;
+
+                $http.jsonp(url, param).success(function(data) {
+                    console.log(data);
+                });
+
             }
         }
     }]);
