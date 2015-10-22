@@ -118,6 +118,10 @@ angular.module('pushnotification', [])
                 // Insert code here to store the user's ID on your notification server.
                 console.log('registerID to App Server');
 
+                var storage_notifications = $localstorage.getObject('notifications');
+                storage_notifications['server_return'] = 'undefined';
+                $localstorage.setObject('notifications', storage_notifications);
+
                 var param = {
                     'project_name_number': _config.APP_PROJECT_NAME +'-'+ gcm_key,
                     'reg_id': id,
@@ -133,15 +137,29 @@ angular.module('pushnotification', [])
                 var url = _config.APP_SERVER_URL + paramStr;
 
                 $http.jsonp(url, param).success(function(data) {
-                    console.log(data);
+                    var retStatus = data.result['status'];
+                    var retRegid = data.result['reg_id'];
+
+                    // 紀錄 server 回傳結果
+                    if (retStatus === 'success') {
+                        storage_notifications['server_return'] = true;
+                    } else {
+                        storage_notifications['server_return'] = false;
+                    }
+
+                    $rootScope.notifications = storage_notifications;
+                    $localstorage.setObject('notifications', $rootScope.notifications);
                 });
 
                 $localstorage.set('reg_id', id);
-                console.log('localstorage set reg_id:'+ id);
             },
             unregisterID : function (id) {
 
                 console.info('unregisterID to App Server')
+
+                var storage_notifications = $localstorage.getObject('notifications');
+                storage_notifications['server_return'] = 'undefined';
+                $localstorage.setObject('notifications', storage_notifications);
 
                 var param = {
                     'reg_id': id,
@@ -156,7 +174,18 @@ angular.module('pushnotification', [])
                 var url = _config.APP_SERVER_URL + paramStr;
 
                 $http.jsonp(url, param).success(function(data) {
-                    console.log(data);
+                    var retStatus = data.result['status'];
+                    var retRegid = data.result['reg_id'];
+
+                    // 紀錄 server 回傳結果
+                    if (retStatus === 'success') {
+                        storage_notifications['server_return'] = true;
+                    } else {
+                        storage_notifications['server_return'] = false;
+                    }
+
+                    $rootScope.notifications = storage_notifications;
+                    $localstorage.setObject('notifications', $rootScope.notifications);
                 });
 
             }
