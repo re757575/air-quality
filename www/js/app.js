@@ -14,12 +14,45 @@ var app = angular.module('starter', [
       'pushnotification'
     ]);
 
-app.run(function($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice) {
+app.run(function($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice, $localstorage, PushProcessingService) {
 
   document.addEventListener("deviceready", function () {
+
     console.info('deviceready');
     // Get all device information.
     $rootScope.deviceInfo = $cordovaDevice.getDevice();
+
+    // 紀錄關注設定
+    var storage_citys = $localstorage.getObject('citys');
+
+    if (Object.keys(storage_citys).length === 0) {
+        $rootScope.citys = citys;
+    } else {
+        $rootScope.citys = storage_citys;
+    }
+
+    // 紀錄推播設定
+    var storage_notifications = $localstorage.getObject('notifications');
+
+    if (Object.keys(storage_notifications).length === 0) {
+        $rootScope.notifications = {on: true};
+        $localstorage.setObject('notifications', $rootScope.notifications);
+    } else {
+        $rootScope.notifications = storage_notifications;
+    }
+
+    // 紀錄 reg_id
+    var storage_reg_id = $localstorage.get('reg_id');
+
+    console.log('storage_reg_id: '+ storage_reg_id);
+
+    if (storage_reg_id === undefined && $rootScope.notifications['on'] === true) {
+      // 向 gcm & app server 註冊 red_id
+      PushProcessingService.initialize();
+    } else {
+      console.log('reg_id 已註冊');
+    }
+
   }, false);
 
   $ionicPlatform.ready(function() {
@@ -127,3 +160,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
         controller: 'settingsCityCtrl'
     });
 });
+
+var citys = [
+    {name: "台北", q: "臺北市", on: true},
+    {name: "台中", q: "臺中市", on: true},
+    {name: "台南", q: "臺南市", on: true},
+    {name: "高雄", q: "高雄市", on: true},
+    {name: "花蓮", q: "花蓮縣", on: true},
+];

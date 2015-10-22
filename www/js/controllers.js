@@ -2,36 +2,7 @@
 var app = angular.module('starter.controllers', []);
 
 app.controller('homeCtrl', ['$scope', '$rootScope', '$location', '$ionicTabsDelegate', 'PushProcessingService', '$localstorage',
-    function($scope, $rootScope, $location, $ionicTabsDelegate, PushProcessingService, $localstorage) {
-
-      // 紀錄關注設定
-      var storage_citys = $localstorage.getObject('citys');
-
-      if (Object.keys(storage_citys).length === 0) {
-          $rootScope.citys = citys;
-      } else {
-          $rootScope.citys = storage_citys;
-      }
-
-      // 紀錄推播設定
-      var storage_notifications = $localstorage.getObject('notifications');
-
-      if (Object.keys(storage_notifications).length === 0) {
-          $rootScope.notifications = notifications;
-          $localstorage.setObject('notifications', notifications);
-      } else {
-          $rootScope.notifications = storage_notifications;
-      }
-
-      // 紀錄 reg_id
-      var storage_reg_id = $localstorage.get('reg_id');
-
-      if (storage_reg_id === undefined) {
-        // 向 gcm & app server 註冊 red_id
-        PushProcessingService.initialize();
-      } else {
-        console.log('storage_reg_id: '+ storage_reg_id);
-      }
+    function($scope, $rootScope, $location, $ionicTabsDelegate) {
 
       $scope.goSettings = function () {
           var selected = $ionicTabsDelegate.selectedIndex();
@@ -130,13 +101,3 @@ app.controller('airCtrl', ['$http', '$scope', '$stateParams', '$ionicLoading', '
         };
     }
 ]);
-
-var citys = [
-    {name: "台北", q: "臺北市", on: true},
-    {name: "台中", q: "臺中市", on: true},
-    {name: "台南", q: "臺南市", on: true},
-    {name: "高雄", q: "高雄市", on: true},
-    {name: "花蓮", q: "花蓮縣", on: true},
-];
-
-var notifications = {on: true};
