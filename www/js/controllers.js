@@ -41,6 +41,13 @@ app.controller('settingsNotificationsCtrl', function($scope, $rootScope, $stateP
         if (undefined !== reg_id && notifications == false) {
             // 有 reg_id, 向 app server取消推播
             PushProcessingService.unregisterID(reg_id);
+
+            window.plugins.toast.showWithOptions({
+                message: "再也不會收到最新空氣品質資訊",
+                duration: "short",
+                position: "bottom",
+                addPixelsY: -200
+            });
         }
         if (undefined !== reg_id && notifications == true) {
             // 有 reg_id, 向 app server 註冊推播

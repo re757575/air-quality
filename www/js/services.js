@@ -155,7 +155,7 @@ angular.module('pushnotification', [])
             },
             unregisterID : function (id) {
 
-                console.info('unregisterID to App Server')
+                console.info('unregisterID to App Server');
 
                 var storage_notifications = $localstorage.getObject('notifications');
                 storage_notifications['server_return'] = 'undefined';

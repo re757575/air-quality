@@ -16,20 +16,20 @@ var app = angular.module('starter', [
 
 app.run(function($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice, $localstorage, PushProcessingService) {
 
+  // 紀錄關注設定
+  var storage_citys = $localstorage.getObject('citys');
+
+  if (Object.keys(storage_citys).length === 0) {
+      $rootScope.citys = citys;
+  } else {
+      $rootScope.citys = storage_citys;
+  }
+
   document.addEventListener("deviceready", function () {
 
     console.info('deviceready');
     // Get all device information.
     $rootScope.deviceInfo = $cordovaDevice.getDevice();
-
-    // 紀錄關注設定
-    var storage_citys = $localstorage.getObject('citys');
-
-    if (Object.keys(storage_citys).length === 0) {
-        $rootScope.citys = citys;
-    } else {
-        $rootScope.citys = storage_citys;
-    }
 
     // 紀錄推播設定
     var storage_notifications = $localstorage.getObject('notifications');
