@@ -1,7 +1,9 @@
+'use strict';
+
 // Ionic Starter Controllers
 var app = angular.module('starter.controllers', []);
 
-app.controller('homeCtrl', ['$scope', '$rootScope', '$location', '$ionicTabsDelegate', 'PushProcessingService', '$localstorage',
+app.controller('homeCtrl', ['$scope', '$rootScope', '$location', '$ionicTabsDelegate',
     function($scope, $rootScope, $location, $ionicTabsDelegate) {
 
       $scope.goSettings = function () {
@@ -39,7 +41,7 @@ app.controller('settingsNotificationsCtrl', function($scope, $rootScope, $stateP
         var notifications = $rootScope.notifications['on'];
 
         if (undefined !== reg_id && notifications == false) {
-            // 有 reg_id, 向 app server取消推播
+            console.log('有 reg_id, 向 app server取消推播');
             PushProcessingService.unregisterID(reg_id);
 
             window.plugins.toast.showWithOptions({
@@ -50,12 +52,12 @@ app.controller('settingsNotificationsCtrl', function($scope, $rootScope, $stateP
             });
         }
         if (undefined !== reg_id && notifications == true) {
-            // 有 reg_id, 向 app server 註冊推播
+            console.log('有 reg_id, 向 app server 註冊推播');
             PushProcessingService.registerID(reg_id);
         }
         if (undefined === reg_id && notifications == true) {
-            // 無 reg_id, 重新向 gcm & app server 註冊
-            PushProcessingService.initialize();
+            console.log('無 reg_id, 重新向 gcm & app server 註冊');
+            PushProcessingService.getRegId();
         }
     };
 });

@@ -22,14 +22,19 @@
     "cordova-plugin-splashscreen",
     "com.ionic.keyboard",
     "org.apache.cordova.media",
-    "com.clone.phonegap.plugins.pushplugin",
+    "org.apache.cordova.file",
     {
       "locator": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
       "id": "cordova-plugin-x-toast"
-    }
+    },
+    "phonegap-plugin-push"
   ],
   "cordovaPlatforms": [
-    "android"
+    {
+      "platform": "android",
+      "version": "",
+      "locator": "android"
+    }
   ],
   "scripts": {
     "postinstall": "ionic state restore",

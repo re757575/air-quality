@@ -1,3 +1,5 @@
+'use strict';
+
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
@@ -31,39 +33,7 @@ app.run(function($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice, $loc
     // Get all device information.
     $rootScope.deviceInfo = $cordovaDevice.getDevice();
 
-    // 紀錄推播設定
-    var storage_notifications = $localstorage.getObject('notifications');
-
-    if (Object.keys(storage_notifications).length === 0) {
-        $rootScope.notifications = {on: true, server_return: false}; // 預設值
-        $localstorage.setObject('notifications', $rootScope.notifications);
-    } else {
-        $rootScope.notifications = storage_notifications;
-    }
-
-    // 紀錄 reg_id
-    var storage_reg_id = $localstorage.get('reg_id');
-
-    console.log('storage_reg_id: '+ storage_reg_id);
-
-    if (storage_reg_id === undefined && $rootScope.notifications['on'] === true) {
-      // 向 gcm & app server 註冊 red_id
-      PushProcessingService.initialize();
-    } else {
-      console.log('reg_id 已註冊');
-    }
-
-    // 當使用者關閉推播且 app server 所回傳狀態不是 true, 則向 app server 註銷 reg_id
-    if (storage_notifications['on'] === false && storage_notifications ['server_return'] !== true &&
-        storage_reg_id !== undefined) {
-        PushProcessingService.unregisterID(storage_reg_id);
-    }
-
-    // 當使用者開啟推播且 app server 所回傳狀態不是 true, 則向 app server 註冊 reg_id
-    if (storage_notifications['on'] === true && storage_notifications ['server_return'] !== true &&
-        storage_reg_id !== undefined) {
-        PushProcessingService.registerID(storage_reg_id);
-    }
+    PushProcessingService.initialize();
 
   }, false);
 

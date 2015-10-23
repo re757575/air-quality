@@ -97,22 +97,27 @@ angular.module('pushnotification', [])
         var _config = getConfig; // private setting
         var gcm_key = $ionicCoreSettings.get('gcm_key'); // Your Project Number
 
-        function onDeviceReady() {
-            console.info('NOTIFY  Device is ready.  Registering with GCM server');
-            //register with google GCM server
-            var pushNotification = window.plugins.pushNotification;
-            pushNotification.register(gcmSuccessHandler, gcmErrorHandler, {'senderID': gcm_key,'ecb':'onNotificationGCM'});
-        }
-        function gcmSuccessHandler(result) {
-            console.info('NOTIFY  pushNotification.register succeeded.  Result = '+result)
-        }
-        function gcmErrorHandler(error) {
-            console.error('NOTIFY  '+error);
-        }
-        return {
+        var push = PushNotification.init({
+            "android": {
+                "senderID": gcm_key,
+                "iconColor": "gray",
+            },
+            "ios": {"alert": "true", "badge": "true", "sound": "true"},
+            "windows": {}
+        });
+
+        var pushNotServe = {
             initialize : function () {
                 console.info('NOTIFY  initializing');
-                document.addEventListener('deviceready', onDeviceReady, false);
+                onDeviceReady();
+            },
+            getRegId : function () {
+                push.on('registration', function(data) {
+                    console.log("registration event");
+                    console.info("Registering with GCM server");
+                    console.log(JSON.stringify(data));
+                    pushNotServe.registerID(data.registrationId);
+                });
             },
             registerID : function (id) {
                 // Insert code here to store the user's ID on your notification server.
@@ -173,6 +178,10 @@ angular.module('pushnotification', [])
 
                 var url = _config.APP_SERVER_URL + paramStr;
 
+                // 暫無效
+                push.unregister(function(){console.log('successHandler');},
+                                function(){console.log('errorHandler');});
+
                 $http.jsonp(url, param).success(function(data) {
                     var retStatus = data.result['status'];
                     var retRegid = data.result['reg_id'];
@@ -189,65 +198,61 @@ angular.module('pushnotification', [])
                 });
 
             }
+        };
+
+        function onDeviceReady() {
+
+            console.info('NOTIFY  Device is ready');
+
+            push.on('notification', function(data) {
+                console.log("notification event");
+                console.log(JSON.stringify(data));
+            });
+
+            push.on('error', function(e) {
+                console.log("push error");
+            });
+
+            // 紀錄推播設定
+            var storage_notifications = $localstorage.getObject('notifications');
+
+            if (Object.keys(storage_notifications).length === 0) {
+                $rootScope.notifications = {on: true, server_return: false}; // 預設值
+                $localstorage.setObject('notifications', $rootScope.notifications);
+            } else {
+                $rootScope.notifications = storage_notifications;
+            }
+
+            // 紀錄 reg_id
+            var storage_reg_id = $localstorage.get('reg_id');
+
+            console.log('storage_reg_id: '+ storage_reg_id);
+
+            if (storage_reg_id === undefined && $rootScope.notifications['on'] === true) {
+              // 向 gcm & app server 註冊 red_id
+                push.on('registration', function(data) {
+                    console.log("registration event");
+                    console.info("Registering with GCM server");
+                    console.log(JSON.stringify(data));
+                    pushNotServe.registerID(data.registrationId);
+                });
+            } else {
+              console.log('reg_id 已註冊');
+            }
+
+            // 當使用者關閉推播且 app server 所回傳狀態不是 true, 則向 app server 註銷 reg_id
+            if (storage_notifications['on'] === false && storage_notifications ['server_return'] !== true &&
+                storage_reg_id !== undefined) {
+                pushNotServe.unregisterID(storage_reg_id);
+            }
+
+            // 當使用者開啟推播且 app server 所回傳狀態不是 true, 則向 app server 註冊 reg_id
+            if (storage_notifications['on'] === true && storage_notifications ['server_return'] !== true &&
+                storage_reg_id !== undefined) {
+                pushNotServe.registerID(storage_reg_id);
+            }
+
         }
+
+        return pushNotServe;
     }]);
-
-// ALL GCM notifications come through here.
-function onNotificationGCM(e) {
-    console.log('EVENT -> RECEIVED:' + e.event + '');
-    switch( e.event )
-    {
-        case 'registered':
-            if ( e.regid.length > 0 )
-            {
-                console.log('REGISTERED with GCM Server -> REGID:' + e.regid + '');
-
-                //call back to web service in Angular.
-                //This works for me because in my code I have a factory called
-                //      PushProcessingService with method registerID
-                var elem = angular.element(document.querySelector('[ng-app]'));
-                var injector = elem.injector();
-                var myService = injector.get('PushProcessingService');
-                myService.registerID(e.regid);
-            }
-            break;
-
-        case 'message':
-            // if this flag is set, this notification happened while we were in the foreground.
-            // you might want to play a sound to get the user's attention, throw up a dialog, etc.
-            if (e.foreground)
-            {
-                //we're using the app when a message is received.
-                console.log('--INLINE NOTIFICATION--' + '');
-
-                // if the notification contains a soundname, play it.
-                var my_media = new Media('/android_asset/www/sound/'+ e.soundname);
-
-                // 多次註冊 reg_id 程式前景將會重複執行
-                // my_media.play();
-                // alert(e.payload.message);
-            }
-            else
-            {
-                // otherwise we were launched because the user touched a notification in the notification tray.
-                if (e.coldstart)
-                    console.log('--COLDSTART NOTIFICATION--' + '');
-                else
-                    console.log('--BACKGROUND NOTIFICATION--' + '');
-
-                // direct user here:
-                window.location = '#/air/city/1';
-            }
-            console.log('MESSAGE -> MSG: ' + e.payload.message + '');
-            console.log('MESSAGE: '+ JSON.stringify(e.payload));
-            break;
-
-        case 'error':
-            console.log('ERROR -> MSG:' + e.msg + '');
-            break;
-
-        default:
-            console.log('EVENT -> Unknown, an event was received and we do not know what it is');
-            break;
-    }
-}
