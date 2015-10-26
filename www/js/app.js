@@ -1,152 +1,139 @@
-'use strict';
+(function () {
+    'use strict';
 
-// Ionic Starter App
+    angular
+        .module('air', ['ionic', 'ionic.utils', 'ionic.service.core',
+                        'ngCordova', 'air.controllers', 'air.services',
+                        'air.config', 'pushnotification'])
+        .run(runConfig)
+        .config(routeConfig);
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-var app = angular.module('starter', [
-      'ionic',
-      'ionic.utils',
-      'ionic.service.core',
-      'ngCordova',
-      'starter.controllers',
-      'starter.services',
-      'starter.config',
-      'pushnotification'
-    ]);
+    runConfig.$inject = ['$rootScope', '$ionicPlatform', '$ionicHistory', '$cordovaDevice', '$localstorage', 'getDataService', 'PushProcessingService'];
 
-app.run(function($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice, $localstorage, PushProcessingService) {
+    function runConfig($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice, $localstorage, getDataService, PushProcessingService) {
+        // 紀錄關注設定
+        var storage_citys = $localstorage.getObject('citys');
 
-  // 紀錄關注設定
-  var storage_citys = $localstorage.getObject('citys');
-
-  if (Object.keys(storage_citys).length === 0) {
-      $rootScope.citys = citys;
-  } else {
-      $rootScope.citys = storage_citys;
-  }
-
-  document.addEventListener("deviceready", function () {
-
-    console.info('deviceready');
-    // Get all device information.
-    $rootScope.deviceInfo = $cordovaDevice.getDevice();
-
-    PushProcessingService.initialize();
-
-  }, false);
-
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
-    }
-
-    // var isAndroid = ionic.Platform.isAndroid();
-    // console.log('isAndroid: ' + isAndroid);
-
-    // var deviceInformation = ionic.Platform.device();
-    // console.log('deviceInformation: ' + deviceInformation);
-
-    // var currentPlatform = ionic.Platform.platform();
-    // var currentPlatformVersion = ionic.Platform.version();
-    // console.log('currentPlatform:' + currentPlatform);
-    // console.log('currentPlatformVersion:' + currentPlatformVersion);
-
-    // ionic.Platform.exitApp();
-
-  });
-
-  // 註冊返回鍵
-  $ionicPlatform.registerBackButtonAction(function(e) {
-    if ($rootScope.backButtonPressedOnceToExit) {
-      // 離開App
-      ionic.Platform.exitApp();
-    } else if ($ionicHistory.backView()) {
-      // 返回上一頁
-      $ionicHistory.goBack();
-      console.log('History Back');
-    } else {
-      // 提示再按一次退出,提示2秒
-      $rootScope.backButtonPressedOnceToExit = true;
-      // toast
-      window.plugins.toast.showWithOptions(
-        {
-          message: "再按一次退出",
-          duration: "short",
-          position: "bottom",
-          addPixelsY: -200  // added a negative value to move it up a bit (default 0)
-        },
-        function(a) {
-          console.log('toast success: ' + a);
-        },
-        function(b) {
-          console.log('toast error: ' + b);
+        if (Object.keys(storage_citys).length === 0) {
+            $rootScope.citys = getDataService.ctiyLsit();
+        } else {
+            $rootScope.citys = storage_citys;
         }
-      );
-      setTimeout(function() {
-        $rootScope.backButtonPressedOnceToExit = false;
-      }, 2000);
-    }
-    e.preventDefault();
-    return false;
-  }, 101);
 
-});
+        document.addEventListener("deviceready", function () {
 
-app.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
-  $ionicConfigProvider.tabs.position('bottom');
-  $urlRouterProvider.otherwise('/tab/home');
-  $stateProvider
-    .state('tab', {
-        url: '/tab',
-        abstract: true,
-        templateUrl: 'templates/tabs.html'
-    })
-    .state('tab.home', {
-        url: '/home',
-        views: {
-            'tab-home': {
-                templateUrl: 'templates/home.html',
-                controller: 'homeCtrl'
+            console.info('deviceready');
+            // Get all device information.
+            $rootScope.deviceInfo = $cordovaDevice.getDevice();
+
+            PushProcessingService.initialize();
+
+        }, false);
+
+        $ionicPlatform.ready(function() {
+            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+            // for form inputs)
+            if(window.cordova && window.cordova.plugins.Keyboard) {
+            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             }
-        }
-    })
-    .state('tab.settings', {
-        url: '/settings',
-        views: {
-            'tab-settings': {
-                templateUrl: 'templates/settings.html',
-                controller: 'settingsCtrl'
+            if(window.StatusBar) {
+            StatusBar.styleDefault();
             }
-        }
-    })
-    .state('air', {
-        url: '/air/city/:id',
-        templateUrl: 'templates/air.html',
-        controller: 'airCtrl'
-    })
-    .state('setting-notifications', {
-        url: '/setting-notifications',
-        templateUrl: 'templates/setting-notifications.html',
-        controller: 'settingsNotificationsCtrl'
-    })
-    .state('setting-city', {
-        url: '/setting-city',
-        templateUrl: 'templates/setting-city.html',
-        controller: 'settingsCityCtrl'
-    });
-});
 
-var citys = [
-    {name: "台北", q: "臺北市", on: true},
-    {name: "台中", q: "臺中市", on: true},
-    {name: "台南", q: "臺南市", on: true},
-    {name: "高雄", q: "高雄市", on: true},
-    {name: "花蓮", q: "花蓮縣", on: true},
-];
+            // var isAndroid = ionic.Platform.isAndroid();
+            // console.log('isAndroid: ' + isAndroid);
+
+            // var deviceInformation = ionic.Platform.device();
+            // console.log('deviceInformation: ' + deviceInformation);
+
+            // var currentPlatform = ionic.Platform.platform();
+            // var currentPlatformVersion = ionic.Platform.version();
+            // console.log('currentPlatform:' + currentPlatform);
+            // console.log('currentPlatformVersion:' + currentPlatformVersion);
+
+            // ionic.Platform.exitApp();
+        });
+
+        // 註冊返回鍵
+        $ionicPlatform.registerBackButtonAction(function(e) {
+          if ($rootScope.backButtonPressedOnceToExit) {
+            // 離開App
+            ionic.Platform.exitApp();
+          } else if ($ionicHistory.backView()) {
+            // 返回上一頁
+            $ionicHistory.goBack();
+            console.log('History Back');
+          } else {
+            // 提示再按一次退出,提示2秒
+            $rootScope.backButtonPressedOnceToExit = true;
+            // toast
+            window.plugins.toast.showWithOptions(
+              {
+                message: "再按一次退出",
+                duration: "short",
+                position: "bottom",
+                addPixelsY: -200  // added a negative value to move it up a bit (default 0)
+              },
+              function(a) {
+                console.log('toast success: ' + a);
+              },
+              function(b) {
+                console.log('toast error: ' + b);
+              }
+            );
+            setTimeout(function() {
+              $rootScope.backButtonPressedOnceToExit = false;
+            }, 2000);
+          }
+          e.preventDefault();
+          return false;
+        }, 101);
+    }
+
+    routeConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider'];
+
+    function routeConfig($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+        $ionicConfigProvider.tabs.position('bottom');
+        $urlRouterProvider.otherwise('/tab/home');
+        $stateProvider
+          .state('tab', {
+              url: '/tab',
+              abstract: true,
+              templateUrl: 'templates/tabs.html'
+          })
+          .state('tab.home', {
+              url: '/home',
+              views: {
+                  'tab-home': {
+                      templateUrl: 'templates/home.html',
+                      controller: 'HomeController'
+                  }
+              }
+          })
+          .state('tab.settings', {
+              url: '/settings',
+              views: {
+                  'tab-settings': {
+                      templateUrl: 'templates/settings.html',
+                      controller: 'SettingsController'
+                  }
+              }
+          })
+          .state('setting-city', {
+              url: '/setting-city',
+              templateUrl: 'templates/setting-city.html',
+              controller: 'SettingsCityController'
+          })
+          .state('setting-notifications', {
+              url: '/setting-notifications',
+              templateUrl: 'templates/setting-notifications.html',
+              controller: 'SettingsNotificationsController'
+          })
+          .state('air', {
+              url: '/air/city/:id',
+              templateUrl: 'templates/air.html',
+              controller: 'AirController'
+          })
+    }
+
+})();

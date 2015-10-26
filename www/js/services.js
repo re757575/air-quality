@@ -1,14 +1,59 @@
-'use strict';
+(function () {
+    'use strict';
 
-angular.module('starter.services', []).
-    factory('getDataService', ['$http', '$q',  function($http, $q) {
+    angular
+        .module('ionic.utils', [])
+        .factory('$localstorage', localstorageService);
 
+    localstorageService.$inject = ['$window'];
+
+    function localstorageService ($window) {
+        return {
+            set: function(key, value) {
+                $window.localStorage[key] = value;
+            },
+            get: function(key, defaultValue) {
+                return $window.localStorage[key] || defaultValue;
+            },
+            setObject: function(key, value) {
+                $window.localStorage[key] = JSON.stringify(value);
+            },
+            getObject: function(key) {
+                return JSON.parse($window.localStorage[key] || '{}');
+            }
+        }
+    }
+
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('air.services', [])
+        .factory('getDataService', getDataService);
+
+    getDataService.$inject = ['$http', '$q'];
+
+    function getDataService ($http, $q) {
         var service = {
             url: 'http://opendata.epa.gov.tw/ws/Data/AQX/?',
+            ctiyLsit: ctiyLsit,
             loadData: loadData
         };
 
         return service;
+
+        function ctiyLsit() {
+          var citys = [
+              {name: "台北", q: "臺北市", on: true},
+              {name: "台中", q: "臺中市", on: true},
+              {name: "台南", q: "臺南市", on: true},
+              {name: "高雄", q: "高雄市", on: true},
+              {name: "花蓮", q: "花蓮縣", on: true},
+          ];
+          return citys;
+        }
 
         function loadData(type, data) {
             var def = $q.defer();
@@ -67,142 +112,142 @@ angular.module('starter.services', []).
                 return def.promise;
             }
         };
+    }
 
-}]);
+})();
 
-angular.module('ionic.utils', [])
-    .factory('$localstorage', ['$window', function($window) {
-      return {
-        set: function(key, value) {
-          $window.localStorage[key] = value;
-        },
-        get: function(key, defaultValue) {
-          return $window.localStorage[key] || defaultValue;
-        },
-        setObject: function(key, value) {
-          $window.localStorage[key] = JSON.stringify(value);
-        },
-        getObject: function(key) {
-          return JSON.parse($window.localStorage[key] || '{}');
-        }
-      }
-}]);
+// https://github.com/phonegap/phonegap-plugin-push
+// factory for processing push notifications.
+(function () {
+    'use strict';
 
-// http://intown.biz/2014/04/11/android-notifications/
-//factory for processing push notifications.
-angular.module('pushnotification', [])
-   .factory('PushProcessingService', ['$rootScope', '$http', '$ionicCoreSettings', 'getConfig', '$localstorage',
-    function($rootScope, $http, $ionicCoreSettings, getConfig, $localstorage) {
+    angular
+        .module('pushnotification', [])
+        .factory('PushProcessingService', PushProcessingService);
 
-        var _config = getConfig; // private setting
+    PushProcessingService.$inject = ['$rootScope', '$http', '$ionicCoreSettings', 'appServerConfig', '$localstorage'];
+
+    function PushProcessingService ($rootScope, $http, $ionicCoreSettings, appServerConfig, $localstorage) {
+
+        var _config = appServerConfig; // private setting
         var gcm_key = $ionicCoreSettings.get('gcm_key'); // Your Project Number
 
         var pushNotServe = {
-            pushConfig : function () {
-                var push = PushNotification.init({
-                    "android": {
-                        "senderID": gcm_key,
-                        "iconColor": "gray",
-                    },
-                    "ios": {"alert": "true", "badge": "true", "sound": "true"},
-                    "windows": {}
-                });
-                return push;
-            },
-            initialize : function () {
-                console.info('NOTIFY  initializing');
-                onDeviceReady();
-            },
-            getRegId : function () {
-                var push = pushNotServe.pushConfig();
-                push.on('registration', function(data) {
-                    console.log("registration event");
-                    console.info("Registering with GCM server");
-                    console.log(JSON.stringify(data));
-                    pushNotServe.registerID(data.registrationId);
-                });
-            },
-            registerID : function (id) {
-                // Insert code here to store the user's ID on your notification server.
-                console.log('registerID to App Server');
-
-                var storage_notifications = $localstorage.getObject('notifications');
-                storage_notifications['server_return'] = 'undefined';
-                $localstorage.setObject('notifications', storage_notifications);
-
-                var param = {
-                    'project_name_number': _config.APP_PROJECT_NAME +'-'+ gcm_key,
-                    'reg_id': id,
-                    'action': 'registerID',
-                    'callback': 'JSON_CALLBACK',
-                    'deviceInfo': JSON.stringify($rootScope.deviceInfo)
-                }
-
-                var paramStr = Object.keys(param).map(function(key) {
-                    return key + '=' + param[key];
-                }).join('&');
-
-                var url = _config.APP_SERVER_URL + paramStr;
-
-                $http.jsonp(url, param).success(function(data) {
-                    var retStatus = data.result['status'];
-                    var retRegid = data.result['reg_id'];
-
-                    // 紀錄 server 回傳結果
-                    if (retStatus === 'success') {
-                        storage_notifications['server_return'] = true;
-                    } else {
-                        storage_notifications['server_return'] = false;
-                    }
-
-                    $rootScope.notifications = storage_notifications;
-                    $localstorage.setObject('notifications', $rootScope.notifications);
-                });
-
-                $localstorage.set('reg_id', id);
-            },
-            unregisterID : function (id) {
-
-                console.info('unregisterID to App Server');
-
-                var storage_notifications = $localstorage.getObject('notifications');
-                storage_notifications['server_return'] = 'undefined';
-                $localstorage.setObject('notifications', storage_notifications);
-
-                var param = {
-                    'reg_id': id,
-                    'action': 'unregisterID',
-                    'callback': 'JSON_CALLBACK',
-                }
-
-                var paramStr = Object.keys(param).map(function(key) {
-                    return key + '=' + param[key];
-                }).join('&');
-
-                var url = _config.APP_SERVER_URL + paramStr;
-
-                var push = pushNotServe.pushConfig();
-                // 暫無效
-                push.unregister(function(){console.log('successHandler');},
-                                function(){console.log('errorHandler');});
-
-                $http.jsonp(url, param).success(function(data) {
-                    var retStatus = data.result['status'];
-                    var retRegid = data.result['reg_id'];
-
-                    // 紀錄 server 回傳結果
-                    if (retStatus === 'success') {
-                        storage_notifications['server_return'] = true;
-                    } else {
-                        storage_notifications['server_return'] = false;
-                    }
-
-                    $rootScope.notifications = storage_notifications;
-                    $localstorage.setObject('notifications', $rootScope.notifications);
-                });
-
-            }
+            pushConfig: pushConfig,
+            initialize: initialize,
+            getRegId: getRegId,
+            registerID: registerID,
+            unregisterID: unregisterID
         };
+
+        return pushNotServe;
+
+        function pushConfig() {
+            var push = PushNotification.init({
+                "android": {
+                    "senderID": gcm_key,
+                    "iconColor": "gray",
+                },
+                "ios": {"alert": "true", "badge": "true", "sound": "true"},
+                "windows": {}
+            });
+            return push;
+        }
+
+        function initialize() {
+            console.info('NOTIFY  initializing');
+            onDeviceReady();
+        }
+
+        function getRegId() {
+            var push = pushNotServe.pushConfig();
+            push.on('registration', function(data) {
+                console.log("registration event");
+                console.info("Registering with GCM server");
+                console.log(JSON.stringify(data));
+                pushNotServe.registerID(data.registrationId);
+            });
+        }
+
+        function registerID(id) {
+            // Insert code here to store the user's ID on your notification server.
+            console.log('registerID to App Server');
+
+            var storage_notifications = $localstorage.getObject('notifications');
+            storage_notifications['server_return'] = 'undefined';
+            $localstorage.setObject('notifications', storage_notifications);
+
+            var param = {
+                'project_name_number': _config.APP_PROJECT_NAME +'-'+ gcm_key,
+                'reg_id': id,
+                'action': 'registerID',
+                'callback': 'JSON_CALLBACK',
+                'deviceInfo': JSON.stringify($rootScope.deviceInfo)
+            }
+
+            var paramStr = Object.keys(param).map(function(key) {
+                return key + '=' + param[key];
+            }).join('&');
+
+            var url = _config.APP_SERVER_URL + paramStr;
+
+            $http.jsonp(url, param).success(function(data) {
+                var retStatus = data.result['status'];
+                var retRegid = data.result['reg_id'];
+
+                // 紀錄 server 回傳結果
+                if (retStatus === 'success') {
+                    storage_notifications['server_return'] = true;
+                } else {
+                    storage_notifications['server_return'] = false;
+                }
+
+                $rootScope.notifications = storage_notifications;
+                $localstorage.setObject('notifications', $rootScope.notifications);
+            });
+
+            $localstorage.set('reg_id', id);
+        }
+
+        function unregisterID(id) {
+            console.info('unregisterID to App Server');
+
+            var storage_notifications = $localstorage.getObject('notifications');
+            storage_notifications['server_return'] = 'undefined';
+            $localstorage.setObject('notifications', storage_notifications);
+
+            var param = {
+                'reg_id': id,
+                'action': 'unregisterID',
+                'callback': 'JSON_CALLBACK',
+            }
+
+            var paramStr = Object.keys(param).map(function(key) {
+                return key + '=' + param[key];
+            }).join('&');
+
+            var url = _config.APP_SERVER_URL + paramStr;
+
+            var push = pushNotServe.pushConfig();
+            // 暫無效
+            push.unregister(function(){console.log('successHandler');},
+                            function(){console.log('errorHandler');});
+
+            $http.jsonp(url, param).success(function(data) {
+                var retStatus = data.result['status'];
+                var retRegid = data.result['reg_id'];
+
+                // 紀錄 server 回傳結果
+                if (retStatus === 'success') {
+                    storage_notifications['server_return'] = true;
+                } else {
+                    storage_notifications['server_return'] = false;
+                }
+
+                $rootScope.notifications = storage_notifications;
+                $localstorage.setObject('notifications', $rootScope.notifications);
+            });
+        }
 
         function onDeviceReady() {
 
@@ -260,5 +305,6 @@ angular.module('pushnotification', [])
 
         }
 
-        return pushNotServe;
-    }]);
+    }
+
+})();

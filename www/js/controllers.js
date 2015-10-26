@@ -1,69 +1,84 @@
-'use strict';
+(function () {
+    'use strict';
 
-// Ionic Starter Controllers
-var app = angular.module('starter.controllers', []);
+    angular
+        .module('air.controllers', [])
+        .controller('HomeController', HomeController)
+        .controller('SettingsController', SettingsController)
+        .controller('SettingsCityController', SettingsCityController)
+        .controller('SettingsNotificationsController', SettingsNotificationsController)
+        .controller('AirController', AirController);
 
-app.controller('homeCtrl', ['$scope', '$rootScope', '$location', '$ionicTabsDelegate',
-    function($scope, $rootScope, $location, $ionicTabsDelegate) {
+    HomeController.$inject = ['$scope', '$rootScope', '$location', '$ionicTabsDelegate'];
 
-      $scope.goSettings = function () {
+    function HomeController($scope, $rootScope, $location, $ionicTabsDelegate) {
+
+        $scope.goSettings = function () {
           var selected = $ionicTabsDelegate.selectedIndex();
           if (selected != -1) {
               $ionicTabsDelegate.select(selected + 1);
           }
-      }
+        }
     }
-]);
 
-app.controller('settingsCtrl', function($scope, $rootScope, $stateParams, $ionicTabsDelegate) {
+    SettingsController.$inject = ['$scope', '$rootScope', '$ionicTabsDelegate'];
 
-    $scope.goHome = function () {
-        var selected = $ionicTabsDelegate.selectedIndex();
-        if (selected != -1 && selected != 0) {
-            $ionicTabsDelegate.select(selected - 1);
-        }
-    };
-});
+    function SettingsController($scope, $rootScope, $ionicTabsDelegate) {
 
-app.controller('settingsCityCtrl', function($scope, $rootScope, $stateParams, $localstorage) {
+        $scope.goHome = function () {
+            var selected = $ionicTabsDelegate.selectedIndex();
+            if (selected != -1 && selected != 0) {
+                $ionicTabsDelegate.select(selected - 1);
+            }
+        };
+    }
 
-    $scope.change = function (citys) {
-        $localstorage.setObject('citys', $rootScope.citys);
-    };
-});
+    SettingsCityController.$inject = ['$scope', '$rootScope', '$localstorage'];
 
-app.controller('settingsNotificationsCtrl', function($scope, $rootScope, $stateParams, $localstorage, PushProcessingService) {
+    function SettingsCityController($scope, $rootScope, $localstorage) {
 
-    $scope.change = function (notifications) {
-        $localstorage.setObject('notifications', $rootScope.notifications);
+        $scope.change = function (citys) {
+            $localstorage.setObject('citys', $rootScope.citys);
+        };
+    }
 
-        var reg_id = $localstorage.get('reg_id');
-        var notifications = $rootScope.notifications['on'];
+    SettingsNotificationsController.$inject = ['$scope', '$rootScope', '$localstorage', 'PushProcessingService'];
 
-        if (undefined !== reg_id && notifications == false) {
-            console.log('有 reg_id, 向 app server取消推播');
-            PushProcessingService.unregisterID(reg_id);
+    function SettingsNotificationsController($scope, $rootScope, $localstorage, PushProcessingService) {
 
-            window.plugins.toast.showWithOptions({
-                message: "再也不會收到最新空氣品質資訊",
-                duration: "short",
-                position: "bottom",
-                addPixelsY: -200
-            });
-        }
-        if (undefined !== reg_id && notifications == true) {
-            console.log('有 reg_id, 向 app server 註冊推播');
-            PushProcessingService.registerID(reg_id);
-        }
-        if (undefined === reg_id && notifications == true) {
-            console.log('無 reg_id, 重新向 gcm & app server 註冊');
-            PushProcessingService.getRegId();
-        }
-    };
-});
+        $scope.change = function (notifications) {
+            $localstorage.setObject('notifications', $rootScope.notifications);
 
-app.controller('airCtrl', ['$http', '$scope', '$stateParams', '$ionicLoading', '$ionicScrollDelegate', 'getDataService',
-    function($http, $scope, $stateParams, $ionicLoading, $ionicScrollDelegate, getDataService) {
+            var reg_id = $localstorage.get('reg_id');
+            var notifications = $rootScope.notifications['on'];
+
+            if (undefined !== reg_id && notifications == false) {
+                console.log('有 reg_id, 向 app server取消推播');
+                PushProcessingService.unregisterID(reg_id);
+
+                window.plugins.toast.showWithOptions({
+                    message: "再也不會收到最新空氣品質資訊",
+                    duration: "short",
+                    position: "bottom",
+                    addPixelsY: -200
+                });
+            }
+            if (undefined !== reg_id && notifications == true) {
+                console.log('有 reg_id, 向 app server 註冊推播');
+                PushProcessingService.registerID(reg_id);
+            }
+            if (undefined === reg_id && notifications == true) {
+                console.log('無 reg_id, 重新向 gcm & app server 註冊');
+                PushProcessingService.getRegId();
+            }
+        };
+    }
+
+    AirController.$inject = ['$http', '$scope', '$stateParams', '$ionicLoading', '$ionicScrollDelegate', 'getDataService'];
+
+    function AirController($http, $scope, $stateParams, $ionicLoading, $ionicScrollDelegate, getDataService) {
+
+        var citys = getDataService.ctiyLsit();
 
         $scope.city = citys[$stateParams.id];
 
@@ -109,4 +124,5 @@ app.controller('airCtrl', ['$http', '$scope', '$stateParams', '$ionicLoading', '
             }
         };
     }
-]);
+
+})();
