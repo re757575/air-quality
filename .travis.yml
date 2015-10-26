@@ -51,7 +51,9 @@ install:
 - sed -i -e "s/\$VERSIONCODE/$TRAVIS_BUILD_NUMBER/g" config.xml
 - sed -i -e "s/\$VERSIONCODE/$TRAVIS_BUILD_NUMBER/g" package.json
 - npm -g install cordova ionic
-- travis_retry npm install
+- npm install --ignore-scripts
+- travis_retry ionic state restore
+- cordova plugin rm cordova-plugin-console
 - export PATH=$(npm bin):$PATH
 - bower install
 before_script:
@@ -62,7 +64,7 @@ script:
 #- git config --global user.name "Alex.Dai (via Travis-CI)"
 #- git config --global user.email "re757575@gmail.com"
 #- git clone --quiet https://${GH_TOKEN}@github.com/re757575/air-quality output > /dev/null
-- gulp
+#- gulp
 - mkdir -p resources/android/{splash,icon}
 - ionic resources --splash
 - ionic resources --icon
