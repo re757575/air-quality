@@ -97,21 +97,24 @@ angular.module('pushnotification', [])
         var _config = getConfig; // private setting
         var gcm_key = $ionicCoreSettings.get('gcm_key'); // Your Project Number
 
-        var push = PushNotification.init({
-            "android": {
-                "senderID": gcm_key,
-                "iconColor": "gray",
-            },
-            "ios": {"alert": "true", "badge": "true", "sound": "true"},
-            "windows": {}
-        });
-
         var pushNotServe = {
+            pushConfig : function () {
+                var push = PushNotification.init({
+                    "android": {
+                        "senderID": gcm_key,
+                        "iconColor": "gray",
+                    },
+                    "ios": {"alert": "true", "badge": "true", "sound": "true"},
+                    "windows": {}
+                });
+                return push;
+            },
             initialize : function () {
                 console.info('NOTIFY  initializing');
                 onDeviceReady();
             },
             getRegId : function () {
+                var push = pushNotServe.pushConfig();
                 push.on('registration', function(data) {
                     console.log("registration event");
                     console.info("Registering with GCM server");
@@ -178,6 +181,7 @@ angular.module('pushnotification', [])
 
                 var url = _config.APP_SERVER_URL + paramStr;
 
+                var push = pushNotServe.pushConfig();
                 // 暫無效
                 push.unregister(function(){console.log('successHandler');},
                                 function(){console.log('errorHandler');});
@@ -203,6 +207,8 @@ angular.module('pushnotification', [])
         function onDeviceReady() {
 
             console.info('NOTIFY  Device is ready');
+
+            var push = pushNotServe.pushConfig();
 
             push.on('notification', function(data) {
                 console.log("notification event");
