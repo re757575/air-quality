@@ -74,9 +74,10 @@
         };
     }
 
-    AirController.$inject = ['$http', '$scope', '$stateParams', '$ionicLoading', '$ionicScrollDelegate', 'getDataService'];
+    AirController.$inject = ['$http', '$scope', '$stateParams', '$ionicLoading',
+                             '$ionicScrollDelegate', 'getDataService', 'connection'];
 
-    function AirController($http, $scope, $stateParams, $ionicLoading, $ionicScrollDelegate, getDataService) {
+    function AirController($http, $scope, $stateParams, $ionicLoading, $ionicScrollDelegate, getDataService, connection) {
 
         var citys = getDataService.ctiyLsit();
 
@@ -96,20 +97,50 @@
             $scope.airList = data;
         }, function(error) {
             $scope.airList = [];
-            alert('Error: '+ error.status);
+            var connectionStatus = connection.checkConnection();
+
+            if (connectionStatus === 'No network connection') {
+                window.plugins.toast.showWithOptions({
+                    message: "裝置目前無網路連線，請檢查網路狀態",
+                    duration: "short",
+                    position: "bottom",
+                    addPixelsY: -200
+                });
+                console.info('offline');
+            } else {
+                alert('Error: '+ error.status);
+            }
+
             console.log(error);
+
         }).finally(function() {
             $ionicLoading.hide();
         });
 
         $scope.doRefresh = function() {
+
             getDataService.loadData('AirQuality', {'city': $scope.city.q})
             .then(function(data) {
                 $scope.airList = data;
             }, function(error) {
                 $scope.airList = [];
-                alert('Error: '+ error.status);
+
+                var connectionStatus = connection.checkConnection();
+
+                if (connectionStatus === 'No network connection') {
+                    window.plugins.toast.showWithOptions({
+                        message: "裝置目前無網路連線，請檢查網路狀態",
+                        duration: "short",
+                        position: "bottom",
+                        addPixelsY: -200
+                    });
+                    console.info('offline');
+                } else {
+                    alert('Error: '+ error.status);
+                }
+
                 console.log(error);
+
             }).finally(function() {
                 $scope.$broadcast('scroll.refreshComplete');
             });

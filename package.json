@@ -31,7 +31,8 @@
       "id": "phonegap-plugin-push"
     },
     "cordova-plugin-console",
-    "cordova-plugin-statusbar"
+    "cordova-plugin-statusbar",
+    "cordova-plugin-network-information"
   ],
   "cordovaPlatforms": [
     {

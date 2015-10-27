@@ -8,9 +8,10 @@
         .run(runConfig)
         .config(routeConfig);
 
-    runConfig.$inject = ['$rootScope', '$ionicPlatform', '$ionicHistory', '$cordovaDevice', '$localstorage', 'getDataService', 'PushProcessingService'];
+    runConfig.$inject = ['$rootScope', '$ionicPlatform', '$ionicHistory', '$cordovaDevice',
+                         '$localstorage', 'getDataService', 'PushProcessingService', 'connection'];
 
-    function runConfig($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice, $localstorage, getDataService, PushProcessingService) {
+    function runConfig($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice, $localstorage, getDataService, PushProcessingService, connection) {
         // 紀錄關注設定
         var storage_citys = $localstorage.getObject('citys');
 
@@ -25,6 +26,25 @@
             console.info('deviceready');
             // Get all device information.
             $rootScope.deviceInfo = $cordovaDevice.getDevice();
+
+            $ionicPlatform.on('online', function() {
+                var connectionStatus = connection.checkConnection();
+                console.info('online');
+                console.log('Connection type: '+ connectionStatus);
+            });
+
+            $ionicPlatform.on('offline', function() {
+                var connectionStatus = connection.checkConnection();
+                console.info('offline');
+                console.log('Connection type: '+ connectionStatus);
+
+                window.plugins.toast.showWithOptions({
+                    message: "裝置目前無網路連線，請檢查網路狀態",
+                    duration: "long",
+                    position: "bottom",
+                    addPixelsY: -200
+                });
+            });
 
             PushProcessingService.initialize();
 
