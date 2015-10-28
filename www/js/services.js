@@ -21,6 +21,9 @@
             },
             getObject: function(key) {
                 return JSON.parse($window.localStorage[key] || '{}');
+            },
+            remove: function(key) {
+                $window.localStorage.removeItem(key);
             }
         }
     }
@@ -254,9 +257,12 @@
             var url = _config.APP_SERVER_URL + paramStr;
 
             var push = pushNotServe.pushConfig();
-            // 暫無效
-            push.unregister(function(){console.log('successHandler');},
-                            function(){console.log('errorHandler');});
+
+            // gcm server 會銷毀 reg_id, 但裝置重新註冊 reg_id 不會改變(需重新安裝?)
+            // push.unregister(function(){console.log('successHandler');},
+            //                 function(){console.log('errorHandler');});
+
+            $localstorage.remove('reg_id');
 
             $http.jsonp(url, param).success(function(data) {
                 var retStatus = data.result['status'];
