@@ -53,7 +53,7 @@ install:
 - sed -i -e "s/\$VERSIONCODE/$TRAVIS_BUILD_NUMBER/g" package.json
 - npm -g install cordova ionic
 - npm install --ignore-scripts
-- travis_wait ionic state restore
+- ionic state restore
 - cordova plugin rm cordova-plugin-console
 - export PATH=$(npm bin):$PATH
 - bower install
@@ -85,6 +85,7 @@ after_failure:
 - echo "After failure stage"
 after_script:
 - echo "After script stage"
+- echo $TRAVIS_TEST_RESULT
 deploy:
   provider: releases
   api_key: "${GH_TOKEN}"
