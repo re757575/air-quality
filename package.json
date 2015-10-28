@@ -36,7 +36,8 @@
       "locator": "https://github.com/phonegap/phonegap-plugin-push.git",
       "id": "phonegap-plugin-push"
     },
-    "cordova-plugin-file"
+    "cordova-plugin-file",
+    "cordova-plugin-dialogs"
   ],
   "cordovaPlatforms": [
     "android"

@@ -38,12 +38,12 @@
                 console.info('offline');
                 console.log('Connection type: '+ connectionStatus);
 
-                window.plugins.toast.showWithOptions({
-                    message: "裝置目前無網路連線，請檢查網路狀態",
-                    duration: "long",
-                    position: "bottom",
-                    addPixelsY: -200
-                });
+                navigator.notification.alert(
+                    '裝置目前無網路連線，請檢查網路狀態', // message
+                     null, // callback
+                    '連線異常', // title
+                    '確認' // buttonName
+                );
             });
 
             PushProcessingService.initialize();
