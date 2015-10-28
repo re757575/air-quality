@@ -53,7 +53,7 @@ install:
 - sed -i -e "s/\$VERSIONCODE/$TRAVIS_BUILD_NUMBER/g" package.json
 - npm -g install cordova ionic
 - npm install --ignore-scripts
-- travis_wait ionic state restore
+- travis_wait cordova prepare
 - cordova plugin rm cordova-plugin-console
 - export PATH=$(npm bin):$PATH
 - bower install
