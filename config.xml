@@ -42,17 +42,4 @@
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
-    <engine name="android" spec="~4.1.1" />
-    <engine name="browser" spec="~4.0.0" />
-    <plugin name="cordova-plugin-media" spec="~1.0.1" />
-    <plugin name="cordova-plugin-whitelist" spec="~1.0.0" />
-    <plugin name="cordova-plugin-console" spec="~1.0.1" />
-    <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
-    <plugin name="cordova-plugin-network-information" spec="~1.0.1" />
-    <plugin name="cordova-plugin-splashscreen" spec="~2.1.0" />
-    <plugin name="cordova-plugin-device" spec="~1.0.1" />
-    <plugin name="com.ionic.keyboard" spec="~1.0.4" />
-    <plugin name="cordova-plugin-x-toast" spec="https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git" />
-    <plugin name="phonegap-plugin-push" spec="https://github.com/phonegap/phonegap-plugin-push.git" />
-    <plugin name="cordova-plugin-file" spec="~3.0.0" />
 </widget>

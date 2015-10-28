@@ -16,7 +16,29 @@
     "shelljs": "^0.3.0"
   },
   "scripts": {
-    "postinstall": "cordova prepare",
-    "clean": "cordova platform remove android; cordova platform remove ios; cordova platform remove browser;"
-  }
+    "postinstall": "ionic state restore",
+    "clean": "ionic platform remove android; ionic platform remove ios; ionic platform remove browser;"
+  },
+  "cordovaPlugins": [
+    "cordova-plugin-media",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-console",
+    "cordova-plugin-statusbar",
+    "cordova-plugin-network-information",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-device",
+    "com.ionic.keyboard",
+    {
+      "locator": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
+      "id": "cordova-plugin-x-toast"
+    },
+    {
+      "locator": "https://github.com/phonegap/phonegap-plugin-push.git",
+      "id": "phonegap-plugin-push"
+    },
+    "cordova-plugin-file"
+  ],
+  "cordovaPlatforms": [
+    "android"
+  ]
 }
