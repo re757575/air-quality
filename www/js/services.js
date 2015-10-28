@@ -283,6 +283,9 @@
             push.on('notification', function(data) {
                 console.log("notification event");
                 console.log(JSON.stringify(data));
+
+                var my_media = new Media('/android_asset/www/sound/'+ data.sound);
+                my_media.play();
             });
 
             push.on('error', function(e) {
