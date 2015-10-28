@@ -175,6 +175,7 @@
                 "android": {
                     "senderID": gcm_key,
                     "iconColor": "gray",
+                    "forceShow": true
                 },
                 "ios": {"alert": "true", "badge": "true", "sound": "true"},
                 "windows": {}
