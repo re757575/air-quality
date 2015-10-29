@@ -61,9 +61,9 @@
         .module('air.services', [])
         .factory('getDataService', getDataService);
 
-    getDataService.$inject = ['$http', '$q'];
+    getDataService.$inject = ['$rootScope', '$http', '$q', 'connection'];
 
-    function getDataService ($http, $q) {
+    function getDataService ($rootScope, $http, $q, connection) {
         var service = {
             url: 'http://opendata.epa.gov.tw/ws/Data/AQX/?',
             ctiyLsit: ctiyLsit,
@@ -103,7 +103,23 @@
 
                 var url = encodeURI(service.url + paramStr);
 
-                $http.jsonp(url, {timeout: def.promise})
+                $http.jsonp(url, {
+                        timeout: def.promise,
+                        transformRequest: function(data) {
+                            console.log('request started');
+                            console.log(connection.checkConnection());
+                            var connectionStatus = connection.checkConnection()
+                            if (connectionStatus === 'No network connection') {
+                                console.info('offline');
+                                def.reject({'data': data, 'status': '裝置目前無網路連線，請檢查網路狀態'});
+                                return def.promise;
+                            }
+                        },
+                        transformResponse: function(data) {
+                            console.log('request stopped');
+                            return data;
+                        }
+                    })
                     .success(function (data, status, headers, config, statusText) {
 
                         var imageBaseUrl = 'img/face-icon/48/';

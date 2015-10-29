@@ -97,19 +97,13 @@
             $scope.airList = data;
         }, function(error) {
             $scope.airList = [];
-            var connectionStatus = connection.checkConnection();
 
-            if (connectionStatus === 'No network connection') {
-                window.plugins.toast.showWithOptions({
-                    message: "裝置目前無網路連線，請檢查網路狀態",
-                    duration: "short",
-                    position: "bottom",
-                    addPixelsY: -200
-                });
-                console.info('offline');
-            } else {
-                alert('Error: '+ error.status);
-            }
+            window.plugins.toast.showWithOptions({
+                message: error.status,
+                duration: "short",
+                position: "bottom",
+                addPixelsY: -200
+            });
 
             console.log(error);
 
@@ -125,19 +119,12 @@
             }, function(error) {
                 $scope.airList = [];
 
-                var connectionStatus = connection.checkConnection();
-
-                if (connectionStatus === 'No network connection') {
-                    window.plugins.toast.showWithOptions({
-                        message: "裝置目前無網路連線，請檢查網路狀態",
-                        duration: "short",
-                        position: "bottom",
-                        addPixelsY: -200
-                    });
-                    console.info('offline');
-                } else {
-                    alert('Error: '+ error.status);
-                }
+                window.plugins.toast.showWithOptions({
+                    message: error.status,
+                    duration: "short",
+                    position: "bottom",
+                    addPixelsY: -200
+                });
 
                 console.log(error);
 
