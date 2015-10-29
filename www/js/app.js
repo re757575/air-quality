@@ -33,18 +33,7 @@
                 console.log('Connection type: '+ connectionStatus);
             });
 
-            $ionicPlatform.on('offline', function() {
-                var connectionStatus = connection.checkConnection();
-                console.info('offline');
-                console.log('Connection type: '+ connectionStatus);
-
-                navigator.notification.alert(
-                    '裝置目前無網路連線，請檢查網路狀態', // message
-                     null, // callback
-                    '連線異常', // title
-                    '確認' // buttonName
-                );
-            });
+            $ionicPlatform.on('offline', function() {});
 
             PushProcessingService.initialize();
 

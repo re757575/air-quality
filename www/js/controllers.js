@@ -9,9 +9,20 @@
         .controller('SettingsNotificationsController', SettingsNotificationsController)
         .controller('AirController', AirController);
 
-    HomeController.$inject = ['$scope', '$rootScope', '$location', '$ionicTabsDelegate'];
+    HomeController.$inject = ['$scope', '$rootScope', '$location', '$ionicTabsDelegate', '$ionicPlatform', 'connection'];
 
-    function HomeController($scope, $rootScope, $location, $ionicTabsDelegate) {
+    function HomeController($scope, $rootScope, $location, $ionicTabsDelegate, $ionicPlatform, connection) {
+
+        var connectionStatus = connection.checkConnection();
+        console.info('offline');
+        console.log('Connection type: '+ connectionStatus);
+
+        navigator.notification.alert(
+            '裝置目前無網路連線，請檢查網路狀態', // message
+             null, // callback
+            '連線異常', // title
+            '確認' // buttonName
+        );
 
         $scope.goSettings = function () {
           var selected = $ionicTabsDelegate.selectedIndex();
@@ -83,18 +94,21 @@
 
         $scope.city = citys[$stateParams.id];
 
-        $ionicLoading.show({
-            content: 'Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0,
-            template: '讀取中..'
-        });
-
         getDataService.loadData('AirQuality', {'city': $scope.city.q})
         .then(function(data) {
-            $scope.airList = data;
+            $scope.airList = [];
+
+            if (data !== 'timeout') {
+                $scope.airList = data;
+            } else {
+                window.plugins.toast.showWithOptions({
+                    message: '連線逾時',
+                    duration: "short",
+                    position: "bottom",
+                    addPixelsY: -200
+                });
+            }
+
         }, function(error) {
             $scope.airList = [];
 
@@ -108,7 +122,6 @@
             console.log(error);
 
         }).finally(function() {
-            $ionicLoading.hide();
         });
 
         $scope.doRefresh = function() {

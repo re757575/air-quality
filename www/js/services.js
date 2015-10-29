@@ -61,9 +61,9 @@
         .module('air.services', [])
         .factory('getDataService', getDataService);
 
-    getDataService.$inject = ['$rootScope', '$http', '$q', 'connection'];
+    getDataService.$inject = ['$rootScope', '$http', '$q', '$timeout', 'connection', '$ionicLoading'];
 
-    function getDataService ($rootScope, $http, $q, connection) {
+    function getDataService ($rootScope, $http, $q, $timeout, connection, $ionicLoading) {
         var service = {
             url: 'http://opendata.epa.gov.tw/ws/Data/AQX/?',
             ctiyLsit: ctiyLsit,
@@ -114,9 +114,19 @@
                                 def.reject({'data': data, 'status': '裝置目前無網路連線，請檢查網路狀態'});
                                 return def.promise;
                             }
+
+                            $ionicLoading.show({
+                                content: 'Loading',
+                                animation: 'fade-in',
+                                showBackdrop: true,
+                                maxWidth: 200,
+                                showDelay: 0,
+                                template: '讀取中..'
+                            });
                         },
                         transformResponse: function(data) {
                             console.log('request stopped');
+                            $ionicLoading.hide();
                             return data;
                         }
                     })
@@ -151,8 +161,15 @@
                         }
                         def.resolve(data);
                     }).error(function(data, status) {
+                        $ionicLoading.hide();
                         def.reject({'data': data, 'status': status});
                 });
+
+                $timeout(function() {
+                    def.resolve('timeout'); // this aborts the request!
+                    $ionicLoading.hide();
+                }, 15000);
+
                 return def.promise;
             }
         };
