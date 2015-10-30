@@ -36,6 +36,12 @@
         }
 
         function checkConnection() {
+
+            // browser
+            if (navigator.connection === undefined) {
+                return 'browser debug';
+            }
+
             var networkState = navigator.connection.type;
 
             var states = {};
@@ -107,7 +113,7 @@
                         timeout: def.promise,
                         transformRequest: function(data) {
                             console.log('request started');
-                            console.log(connection.checkConnection());
+                            console.log('connection type: '+ connection.checkConnection());
                             var connectionStatus = connection.checkConnection()
                             if (connectionStatus === 'No network connection') {
                                 console.info('offline');
