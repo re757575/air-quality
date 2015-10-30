@@ -162,6 +162,11 @@
                         def.resolve(data);
                     }).error(function(data, status) {
                         $ionicLoading.hide();
+
+                        if (status == '404') {
+                            status = '裝置目前無網路連線，請檢查網路狀態'
+                        };
+
                         def.reject({'data': data, 'status': status});
                 });
 

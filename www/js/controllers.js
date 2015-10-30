@@ -13,16 +13,18 @@
 
     function HomeController($scope, $rootScope, $location, $ionicTabsDelegate, $ionicPlatform, connection) {
 
+    document.addEventListener("deviceready", function () {
         var connectionStatus = connection.checkConnection();
-        console.info('offline');
-        console.log('Connection type: '+ connectionStatus);
 
-        navigator.notification.alert(
-            '裝置目前無網路連線，請檢查網路狀態', // message
-             null, // callback
-            '連線異常', // title
-            '確認' // buttonName
-        );
+        if (connectionStatus === 'No network connection') {
+            navigator.notification.alert(
+                '裝置目前無網路連線，請檢查網路狀態', // message
+                 null, // callback
+                '連線異常', // title
+                '確認' // buttonName
+            );
+        }
+    });
 
         $scope.goSettings = function () {
           var selected = $ionicTabsDelegate.selectedIndex();
@@ -96,17 +98,17 @@
 
         getDataService.loadData('AirQuality', {'city': $scope.city.q})
         .then(function(data) {
-            $scope.airList = [];
 
-            if (data !== 'timeout') {
-                $scope.airList = data;
-            } else {
+            if (data === 'timeout') {
+                $scope.airList = [];
                 window.plugins.toast.showWithOptions({
                     message: '連線逾時',
                     duration: "short",
                     position: "bottom",
                     addPixelsY: -200
                 });
+            } else {
+                $scope.airList = data;
             }
 
         }, function(error) {
@@ -128,7 +130,17 @@
 
             getDataService.loadData('AirQuality', {'city': $scope.city.q})
             .then(function(data) {
-                $scope.airList = data;
+                if (data === 'timeout') {
+                    $scope.airList = [];
+                    window.plugins.toast.showWithOptions({
+                        message: '連線逾時',
+                        duration: "short",
+                        position: "bottom",
+                        addPixelsY: -200
+                    });
+                } else {
+                    $scope.airList = data;
+                }
             }, function(error) {
                 $scope.airList = [];
 

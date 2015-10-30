@@ -9,9 +9,9 @@
         .config(routeConfig);
 
     runConfig.$inject = ['$rootScope', '$ionicPlatform', '$ionicHistory', '$cordovaDevice',
-                         '$localstorage', 'getDataService', 'PushProcessingService', 'connection'];
+                         '$localstorage', 'getDataService', 'PushProcessingService', 'connection', '$location'];
 
-    function runConfig($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice, $localstorage, getDataService, PushProcessingService, connection) {
+    function runConfig($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice, $localstorage, getDataService, PushProcessingService, connection, $location) {
         // 紀錄關注設定
         var storage_citys = $localstorage.getObject('citys');
 
@@ -65,7 +65,10 @@
 
         // 註冊返回鍵
         $ionicPlatform.registerBackButtonAction(function(e) {
-          if ($rootScope.backButtonPressedOnceToExit) {
+
+          e.preventDefault();
+
+          if ($rootScope.backButtonPressedOnceToExit && $location.path() == '/tab/home') {
             // 離開App
             ionic.Platform.exitApp();
           } else if ($ionicHistory.backView()) {
