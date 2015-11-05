@@ -9,22 +9,28 @@
         .controller('SettingsNotificationsController', SettingsNotificationsController)
         .controller('AirController', AirController);
 
-    HomeController.$inject = ['$scope', '$rootScope', '$location', '$ionicTabsDelegate', '$ionicPlatform', 'connection'];
+    HomeController.$inject = ['$scope', '$rootScope', '$ionicTabsDelegate',
+                              '$ionicScrollDelegate', '$ionicPlatform', 'connection', '$localstorage', 'getDataService'];
 
-    function HomeController($scope, $rootScope, $location, $ionicTabsDelegate, $ionicPlatform, connection) {
+    function HomeController($scope, $rootScope, $ionicTabsDelegate, $ionicScrollDelegate, $ionicPlatform, connection, $localstorage, getDataService) {
 
-    document.addEventListener("deviceready", function () {
-        var connectionStatus = connection.checkConnection();
+        document.addEventListener("deviceready", function () {
+            var connectionStatus = connection.checkConnection();
 
-        if (connectionStatus === 'No network connection') {
-            navigator.notification.alert(
-                '裝置目前無網路連線，請檢查網路狀態', // message
-                 null, // callback
-                '連線異常', // title
-                '確認' // buttonName
-            );
+            if (connectionStatus === 'No network connection') {
+                navigator.notification.alert(
+                    '裝置目前無網路連線，請檢查網路狀態', // message
+                     null, // callback
+                    '連線異常', // title
+                    '確認' // buttonName
+                );
+            }
+        });
+
+        var lastUpDate = $localstorage.getObject('lastUpDate');
+        if (Object.keys(lastUpDate).length !== 0) {
+            $scope.lastUpDate = lastUpDate.dateTime;
         }
-    });
 
         $scope.goSettings = function () {
           var selected = $ionicTabsDelegate.selectedIndex();
@@ -32,6 +38,86 @@
               $ionicTabsDelegate.select(selected + 1);
           }
         }
+
+        $scope.doRefresh = function() {
+
+            var storage_citysSetting = $localstorage.getObject('citysSetting');
+
+            getDataService.loadData('AirQuality', {'getAll': true})
+            .then(function(data) {
+                if (data === 'timeout') {
+                    $scope.airList = [];
+                    window.plugins.toast.showWithOptions({
+                        message: '連線逾時',
+                        duration: "short",
+                        position: "bottom",
+                        addPixelsY: -200
+                    });
+                } else {
+
+                    var citys = {},
+                        citysSetting = {};
+
+                    angular.forEach(data, function(value, key) {
+                        var _c = value.County.slice(0,2);
+
+                        if (this[_c] === undefined) {
+                            this[_c] = [];
+                            value['on'] = true;
+                            this[_c].push(value);
+                            citysSetting[_c] = {on: true};
+
+                            // 有設定,則不蓋過
+                            if (Object.keys(storage_citysSetting).length !== 0) {
+                                citysSetting[_c] = {'on': storage_citysSetting[_c].on};
+                            }
+
+                        } else {
+                          value['on'] = true;
+                          this[_c].push(value);
+                        }
+
+                    }, citys);
+
+                    var nowDate = new Date();
+                    var formatDate = nowDate.getFullYear() +'-'+ nowDate.getMonth() +'-'+ nowDate.getDate() +' '
+                                   + nowDate.getHours() +':'+ nowDate.getMinutes() +':'+ nowDate.getSeconds();
+
+                    $rootScope.citys = citys;
+                    $rootScope.citysSetting = citysSetting;
+                    $localstorage.setObject('citys', citys);
+                    $localstorage.setObject('citysSetting', citysSetting);
+
+                    $localstorage.setObject('lastUpDate', {
+                        'dateTime': formatDate,
+                        'timestamp': nowDate.getTime()
+                    });
+                    $scope.lastUpDate = formatDate;
+                }
+            }, function(error) {
+
+                window.plugins.toast.showWithOptions({
+                    message: '資料取得失敗: '+ error.status,
+                    duration: "short",
+                    position: "bottom",
+                    addPixelsY: -200
+                });
+
+                console.log(error);
+
+            }).finally(function() {
+                $scope.$broadcast('scroll.refreshComplete');
+            });
+        };
+
+        $scope.doPulling = function(e) {};
+
+        $scope.onRelease = function() {
+            // 修正 Scroll top 未超過 -60, Scroll 文字未消失
+            if ($ionicScrollDelegate.getScrollPosition().top > -60) {
+                $('.scroll-refresher').removeClass('js-scrolling').addClass('invisible');
+            }
+        };
     }
 
     SettingsController.$inject = ['$scope', '$rootScope', '$ionicTabsDelegate'];
@@ -50,8 +136,8 @@
 
     function SettingsCityController($scope, $rootScope, $localstorage) {
 
-        $scope.change = function (citys) {
-            $localstorage.setObject('citys', $rootScope.citys);
+        $scope.change = function (citysSetting) {
+            $localstorage.setObject('citysSetting', $rootScope.citysSetting);
         };
     }
 
@@ -88,47 +174,30 @@
     }
 
     AirController.$inject = ['$http', '$scope', '$stateParams', '$ionicLoading',
-                             '$ionicScrollDelegate', 'getDataService', 'connection'];
+                             '$ionicScrollDelegate', 'getDataService', 'connection', '$localstorage'];
 
-    function AirController($http, $scope, $stateParams, $ionicLoading, $ionicScrollDelegate, getDataService, connection) {
+    function AirController($http, $scope, $stateParams, $ionicLoading, $ionicScrollDelegate, getDataService, connection, $localstorage) {
 
-        var citys = getDataService.ctiyLsit();
+        var city = decodeURI($stateParams.id);
 
-        $scope.city = citys[$stateParams.id];
+        var storage_citys = $localstorage.getObject('citys');
 
-        getDataService.loadData('AirQuality', {'city': $scope.city.q})
-        .then(function(data) {
-
-            if (data === 'timeout') {
-                $scope.airList = [];
-                window.plugins.toast.showWithOptions({
-                    message: '連線逾時',
-                    duration: "short",
-                    position: "bottom",
-                    addPixelsY: -200
-                });
-            } else {
-                $scope.airList = data;
-            }
-
-        }, function(error) {
+        if (Object.keys(storage_citys).length === 0) {
             $scope.airList = [];
+        } else {
+            $scope.airList = storage_citys[city];
+        }
 
-            window.plugins.toast.showWithOptions({
-                message: error.status,
-                duration: "short",
-                position: "bottom",
-                addPixelsY: -200
-            });
+        $scope.city = city;
 
-            console.log(error);
-
-        }).finally(function() {
-        });
+        console.log(city);
+        console.log($scope.airList);
 
         $scope.doRefresh = function() {
 
-            getDataService.loadData('AirQuality', {'city': $scope.city.q})
+            var nowPageCity = $scope.airList[0].County;
+
+            getDataService.loadData('AirQuality', {'city': nowPageCity})
             .then(function(data) {
                 if (data === 'timeout') {
                     $scope.airList = [];

@@ -1,4 +1,4 @@
-<ion-view title="空氣品質概況">
+<ion-view title="{{city}}地區 空氣品質概況">
     <ion-content on-release="onRelease()">
         <ion-refresher
             pulling-text="Pull to refresh..."
@@ -8,7 +8,7 @@
 
         <div ng-repeat="air in airList" class="list card">
             <div class="item">
-                <h2>{{air.SiteName}}</h2>                
+                <h2>{{air.SiteName}} 監測站</h2>
             </div>
             <div class="item item-avatar">
                 <img ng-src="{{air.img}}"/>

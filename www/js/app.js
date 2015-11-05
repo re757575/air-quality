@@ -16,9 +16,58 @@
         var storage_citys = $localstorage.getObject('citys');
 
         if (Object.keys(storage_citys).length === 0) {
-            $rootScope.citys = getDataService.ctiyLsit();
+
+            getDataService.loadData('AirQuality', {'getAll': true})
+            .then(function(data) {
+
+                if (data === 'timeout') {
+                    window.plugins.toast.showWithOptions({
+                        message: '連線逾時',
+                        duration: "short",
+                        position: "bottom",
+                        addPixelsY: -200
+                    });
+                } else {
+                    var citys = {},
+                        citysSetting = {};
+
+                    angular.forEach(data, function(value, key) {
+                        var _c = value.County.slice(0,2);
+
+                        if (this[_c] === undefined) {
+                          this[_c] = [];
+                          value['on'] = true;
+                          this[_c].push(value);
+                          citysSetting[_c] = {on: true};
+                        } else {
+                          value['on'] = true;
+                          this[_c].push(value);
+                        }
+
+                    }, citys);
+
+                    $rootScope.citys = citys;
+                    $rootScope.citysSetting = citysSetting;
+                    $localstorage.setObject('citys', citys);
+                    $localstorage.setObject('citysSetting', citysSetting);
+                }
+
+            }, function(error) {
+                $rootScope.citys = [];
+                $rootScope.citysSetting = [];
+
+                window.plugins.toast.showWithOptions({
+                    message: error.status,
+                    duration: "short",
+                    position: "bottom",
+                    addPixelsY: -200
+                });
+                console.log(error);
+            });
+
         } else {
             $rootScope.citys = storage_citys;
+            $rootScope.citysSetting = $localstorage.getObject('citysSetting');
         }
 
         document.addEventListener("deviceready", function () {

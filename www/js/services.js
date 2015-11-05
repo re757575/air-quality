@@ -67,27 +67,15 @@
         .module('air.services', [])
         .factory('getDataService', getDataService);
 
-    getDataService.$inject = ['$rootScope', '$http', '$q', '$timeout', 'connection', '$ionicLoading'];
+    getDataService.$inject = ['$rootScope', '$http', '$q', '$timeout', 'connection', '$ionicLoading', '$localstorage'];
 
-    function getDataService ($rootScope, $http, $q, $timeout, connection, $ionicLoading) {
+    function getDataService ($rootScope, $http, $q, $timeout, connection, $ionicLoading, $localstorage) {
         var service = {
             url: 'http://opendata.epa.gov.tw/ws/Data/AQX/?',
-            ctiyLsit: ctiyLsit,
             loadData: loadData
         };
 
         return service;
-
-        function ctiyLsit() {
-          var citys = [
-              {name: "台北", q: "臺北市", on: true},
-              {name: "台中", q: "臺中市", on: true},
-              {name: "台南", q: "臺南市", on: true},
-              {name: "高雄", q: "高雄市", on: true},
-              {name: "花蓮", q: "花蓮縣", on: true},
-          ];
-          return citys;
-        }
 
         function loadData(type, data) {
             var def = $q.defer();
@@ -102,6 +90,12 @@
                     'format': 'json',
                     'callback': 'JSON_CALLBACK'
                 };
+
+                var isGetAll = false;
+                if (data.getAll !== undefined && data.getAll === true) {
+                    isGetAll = true;
+                    delete param['$filter'];
+                }
 
                 var paramStr = Object.keys(param).map(function(key) {
                     return key + '=' + param[key];
@@ -165,6 +159,20 @@
                                 data[i]['img'] = imageBaseUrl + 'angry-face-teeth.png';
                             }
                         }
+
+                        if (isGetAll === true) {
+                            var nowDate = new Date();
+                            var formatDate = nowDate.getFullYear() +'-'+ nowDate.getMonth() +'-'+ nowDate.getDate() +' '
+                                           + nowDate.getHours() +':'+ nowDate.getMinutes() +':'+ nowDate.getSeconds();
+
+                            $localstorage.setObject('lastUpDate', {
+                                'dateTime': formatDate,
+                                'timestamp': nowDate.getTime()
+                            });
+
+                            $rootScope.lastUpDate = formatDate;
+                        }
+
                         def.resolve(data);
                     }).error(function(data, status) {
                         $ionicLoading.hide();

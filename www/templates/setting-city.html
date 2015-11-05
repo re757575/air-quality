@@ -1,10 +1,10 @@
 <ion-view title="關注設定">
     <ion-content>
         <ion-list>
-            <ion-item class="item item-toggle" ng-repeat="city in citys">
-                {{city.name}}
+            <ion-item class="item item-toggle" ng-repeat="(key, value) in $root.citysSetting">
+                {{key}}
                 <label class="toggle">
-                    <input type="checkbox" ng-model="city.on" ng-change="change()">
+                    <input type="checkbox" ng-model="value.on" ng-change="change()">
                     <div class="track">
                         <div class="handle"></div>
                     </div>
