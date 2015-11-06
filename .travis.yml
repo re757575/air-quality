@@ -66,6 +66,17 @@ script:
 #- git config --global user.email "re757575@gmail.com"
 #- git clone --quiet https://${GH_TOKEN}@github.com/re757575/air-quality output > /dev/null
 #- gulp
+
+# run server
+#- ionic serve --port 8100 --address localhost &
+#- phantomjs ./test/do-phantomjs.js
+
+# tar image
+#- cd test
+#- tar cvf img.tar img
+#- cd ..
+
+# build app
 - mkdir -p resources/android/{splash,icon}
 - ionic resources --splash
 - ionic resources --icon
@@ -89,7 +100,9 @@ after_script:
 deploy:
   provider: releases
   api_key: "${GH_TOKEN}"
-  file: platforms/android/build/outputs/apk/air-quality.apk
+  file:
+    - platforms/android/build/outputs/apk/air-quality.apk
+    # - test/img.tar
   skip_cleanup: true
   on:
     tags: true
