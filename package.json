@@ -48,10 +48,6 @@
     "cordova-plugin-splashscreen",
     "cordova-plugin-device",
     {
-      "locator": "https://github.com/driftyco/ionic-plugin-keyboard.git",
-      "id": "com.ionic.keyboard"
-    },
-    {
       "locator": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
       "id": "cordova-plugin-x-toast"
     },
@@ -60,7 +56,16 @@
       "id": "phonegap-plugin-push"
     },
     "cordova-plugin-file",
-    "cordova-plugin-dialogs"
+    "cordova-plugin-dialogs",
+    {
+      "locator": "https://github.com/katzer/cordova-plugin-background-mode.git",
+      "id": "de.appplant.cordova.plugin.background-mode"
+    },
+    {
+      "locator": "https://github.com/driftyco/ionic-plugin-keyboard.git",
+      "id": "ionic-plugin-keyboard"
+    },
+    "cordova-plugin-inappbrowser"
   ],
   "cordovaPlatforms": [
     "android"

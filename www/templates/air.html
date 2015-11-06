@@ -7,7 +7,7 @@
         </ion-refresher>
 
         <div ng-repeat="air in airList" class="list card">
-            <div class="item">
+            <div class="item" ng-click="click()">
                 <h2>{{air.SiteName}} 監測站</h2>
             </div>
             <div class="item item-avatar">

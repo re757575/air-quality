@@ -72,7 +72,8 @@
     function getDataService ($rootScope, $http, $q, $timeout, connection, $ionicLoading, $localstorage) {
         var service = {
             url: 'http://opendata.epa.gov.tw/ws/Data/AQX/?',
-            loadData: loadData
+            loadData: loadData,
+            getMsg: getMsg
         };
 
         return service;
@@ -191,7 +192,28 @@
 
                 return def.promise;
             }
-        };
+        }
+
+        function getMsg() {
+
+            var url = 'https://script.google.com/macros/s/AKfycbzVHkFnGLVJds6qRHvzg1kHWSWd8HIB1a-dEs_UVaCE6XGEqHi7/exec?callback=JSON_CALLBACK';
+
+            $http.jsonp(url, {
+            }).success(function (data, status) {
+                console.info(data.result.msg);
+
+                navigator.notification.alert(
+                    data.result.msg,
+                    null,
+                    '空氣品質概況',
+                    '確認'
+                );
+
+            }).error(function(data, status) {
+                console.info(data);
+            });
+        }
+
     }
 
 })();

@@ -24,6 +24,8 @@
                     '連線異常', // title
                     '確認' // buttonName
                 );
+            } else {
+                getDataService.getMsg();
             }
         });
 
@@ -233,6 +235,11 @@
             if ($ionicScrollDelegate.getScrollPosition().top > -60) {
                 $('.scroll-refresher').removeClass('js-scrolling').addClass('invisible');
             }
+        };
+
+        $scope.click = function(e) {
+            var url = 'http://taqm.epa.gov.tw/taqm/tw/PsiMap.aspx';
+            var ref = cordova.InAppBrowser.open(url, '_blank', 'location=no');
         };
     }
 
