@@ -9,10 +9,10 @@
         .controller('SettingsNotificationsController', SettingsNotificationsController)
         .controller('AirController', AirController);
 
-    HomeController.$inject = ['$scope', '$rootScope', '$ionicTabsDelegate',
+    HomeController.$inject = ['$scope', '$rootScope', '$filter', '$ionicTabsDelegate',
                               '$ionicScrollDelegate', '$ionicPlatform', 'connection', '$localstorage', 'getDataService'];
 
-    function HomeController($scope, $rootScope, $ionicTabsDelegate, $ionicScrollDelegate, $ionicPlatform, connection, $localstorage, getDataService) {
+    function HomeController($scope, $rootScope, $filter, $ionicTabsDelegate, $ionicScrollDelegate, $ionicPlatform, connection, $localstorage, getDataService) {
 
         document.addEventListener("deviceready", function () {
             var connectionStatus = connection.checkConnection();
@@ -29,7 +29,7 @@
 
         var lastUpDate = $localstorage.getObject('lastUpDate');
         if (Object.keys(lastUpDate).length !== 0) {
-            $scope.lastUpDate = lastUpDate.dateTime;
+            $scope.lastUpDate = lastUpDate.timestamp;
         }
 
         $scope.goSettings = function () {
@@ -80,8 +80,7 @@
                     }, citys);
 
                     var nowDate = new Date();
-                    var formatDate = nowDate.getFullYear() +'-'+ nowDate.getMonth() +'-'+ nowDate.getDate() +' '
-                                   + nowDate.getHours() +':'+ nowDate.getMinutes() +':'+ nowDate.getSeconds();
+                    var formatDate = $filter('date')(nowDate, "yyyy-MM-dd HH:mm:ss");
 
                     $rootScope.citys = citys;
                     $rootScope.citysSetting = citysSetting;

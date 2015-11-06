@@ -8,14 +8,24 @@
         .run(runConfig)
         .config(routeConfig);
 
-    runConfig.$inject = ['$rootScope', '$ionicPlatform', '$ionicHistory', '$cordovaDevice',
+    runConfig.$inject = ['$rootScope', '$ionicPlatform', '$filter', '$ionicHistory', '$cordovaDevice',
                          '$localstorage', 'getDataService', 'PushProcessingService', 'connection', '$location'];
 
-    function runConfig($rootScope, $ionicPlatform, $ionicHistory, $cordovaDevice, $localstorage, getDataService, PushProcessingService, connection, $location) {
+    function runConfig($rootScope, $ionicPlatform, $filter, $ionicHistory, $cordovaDevice, $localstorage, getDataService, PushProcessingService, connection, $location) {
         // 紀錄關注設定
         var storage_citys = $localstorage.getObject('citys');
 
-        if (Object.keys(storage_citys).length === 0) {
+        // 檢查時間,是否需要更新資料
+        var nowDate = new Date();
+        var haveToUpDate = false;
+        var storage_lastUpDate = $localstorage.getObject('lastUpDate');
+        if (Object.keys(storage_lastUpDate).length > 0) {
+            var nowDateTime = nowDate.getTime();
+            var lastUpDateTime = storage_lastUpDate.timestamp;
+            haveToUpDate = ((nowDateTime - lastUpDateTime) >= 3600000) ? true : false;
+        }
+
+        if (Object.keys(storage_citys).length === 0 || Object.keys(storage_lastUpDate).length === 0 || haveToUpDate) {
 
             getDataService.loadData('AirQuality', {'getAll': true})
             .then(function(data) {
@@ -50,6 +60,14 @@
                     $rootScope.citysSetting = citysSetting;
                     $localstorage.setObject('citys', citys);
                     $localstorage.setObject('citysSetting', citysSetting);
+
+                    var formatDate = $filter('date')(nowDate, "yyyy-MM-dd HH:mm:ss");
+
+                    $localstorage.setObject('lastUpDate', {
+                        'dateTime': formatDate,
+                        'timestamp': nowDate.getTime()
+                    });
+                    $rootScope.lastUpDate = formatDate;
                 }
 
             }, function(error) {
