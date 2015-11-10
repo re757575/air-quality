@@ -198,14 +198,18 @@
 
             var url = 'https://script.google.com/macros/s/AKfycbzVHkFnGLVJds6qRHvzg1kHWSWd8HIB1a-dEs_UVaCE6XGEqHi7/exec?callback=JSON_CALLBACK';
 
-            $http.jsonp(url, {
-            }).success(function (data, status) {
+            $http.jsonp(url, {})
+            .success(function (data, status) {
                 console.info(data.result.msg);
+
+                if (data.result.msg === 'null') {
+                    return false;
+                }
 
                 navigator.notification.alert(
                     data.result.msg,
                     null,
-                    '空氣品質概況',
+                    '空氣品質警告',
                     '確認'
                 );
 
