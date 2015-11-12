@@ -37,6 +37,8 @@
                         position: "bottom",
                         addPixelsY: -200
                     });
+                } else if (data === 'cancelled') {
+                    console.info('abort');
                 } else {
                     var citys = {},
                         citysSetting = {};
@@ -160,12 +162,11 @@
                 console.log('toast error: ' + b);
               }
             );
+
             setTimeout(function() {
               $rootScope.backButtonPressedOnceToExit = false;
             }, 2000);
           }
-          e.preventDefault();
-          return false;
         }, 101);
     }
 

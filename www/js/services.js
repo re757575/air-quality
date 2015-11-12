@@ -67,9 +67,10 @@
         .module('air.services', [])
         .factory('getDataService', getDataService);
 
-    getDataService.$inject = ['$rootScope', '$http', '$q', '$timeout', 'connection', '$ionicLoading', '$localstorage'];
+    getDataService.$inject = ['$rootScope', '$http', '$q', '$timeout', 'connection',
+                              '$ionicLoading', '$localstorage', '$ionicPlatform'];
 
-    function getDataService ($rootScope, $http, $q, $timeout, connection, $ionicLoading, $localstorage) {
+    function getDataService ($rootScope, $http, $q, $timeout, connection, $ionicLoading, $localstorage, $ionicPlatform) {
         var service = {
             url: 'http://opendata.epa.gov.tw/ws/Data/AQX/?',
             loadData: loadData,
@@ -103,6 +104,20 @@
                 }).join('&');
 
                 var url = encodeURI(service.url + paramStr);
+
+                var priority = 600;
+                var callback = function() {
+                    deregister();
+                    // abort request
+                    def.resolve('cancelled');
+                    $ionicLoading.hide();
+                };
+
+                // back button abort request
+                var deregister = $ionicPlatform.registerBackButtonAction(callback, priority);
+
+                // 註銷BackButton事件
+                $rootScope.$on('$destroy', deregister);
 
                 $http.jsonp(url, {
                         timeout: def.promise,

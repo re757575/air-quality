@@ -55,6 +55,8 @@
                         position: "bottom",
                         addPixelsY: -200
                     });
+                } else if (data === 'cancelled') {
+                    console.info('request abort');
                 } else {
 
                     var citys = {},
@@ -208,6 +210,8 @@
                         position: "bottom",
                         addPixelsY: -200
                     });
+                } else if (data === 'cancelled') {
+                    console.info('request abort');
                 } else {
                     $scope.airList = data;
                 }
