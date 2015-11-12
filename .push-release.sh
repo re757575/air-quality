@@ -8,6 +8,12 @@ git fetch --tags
 export TIME_STR=`eval date`
 export VERSION=`grep -Po '(?<="version": ")[^"]*' package.json`
 
+export currentBranchName=`git name-rev --name-only HEAD`
+
+echo -e "\n\e[45mCurrent Branch:[$currentBranchName]\e[0m\n"
+
+if [ "$currentBranchName" != "master" ]; then exit 0; fi
+
 if [ -z "${TRAVIS_TAG}" ]; then git tag $VERSION; fi
 if [ -z "${TRAVIS_TAG}" ]; then git push --tags --quiet; fi
 
