@@ -51,9 +51,8 @@ install:
 - echo "Install stage"
 - sed -i -e "s/\$VERSIONCODE/$TRAVIS_BUILD_NUMBER/g" config.xml
 - sed -i -e "s/\$VERSIONCODE/$TRAVIS_BUILD_NUMBER/g" package.json
-- npm -g install cordova ionic
+- npm install #--ignore-scripts
 - ionic info
-- npm install --ignore-scripts
 - ionic state restore
 - cordova plugin rm cordova-plugin-console
 - export PATH=$(npm bin):$PATH
