@@ -35,6 +35,7 @@
     "shelljs": "^0.3.0"
   },
   "scripts": {
+    "preinstall": "bash ./.is_installed.sh cordova,ionic",
     "postinstall": "ionic state restore",
     "clean": "ionic platform remove android; ionic platform remove ios; ionic platform remove browser;",
     "do-phantomjs": "node_modules/.bin/phantomjs test/do-phantomjs.js"
