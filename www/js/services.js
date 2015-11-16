@@ -194,7 +194,7 @@
                         $ionicLoading.hide();
 
                         if (status == '404') {
-                            status = '裝置目前無網路連線，請檢查網路狀態'
+                            status = '遠端資料異常'
                         };
 
                         def.reject({'data': data, 'status': status});
