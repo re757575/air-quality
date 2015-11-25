@@ -72,7 +72,7 @@
 
     function getDataService ($rootScope, $http, $q, $timeout, connection, $ionicLoading, $localstorage, $ionicPlatform) {
         var service = {
-            url: 'http://opendata.epa.gov.tw/ws/Data/AQX/?',
+            url: 'https://script.google.com/macros/s/AKfycbzVHkFnGLVJds6qRHvzg1kHWSWd8HIB1a-dEs_UVaCE6XGEqHi7/exec?',
             loadData: loadData,
             getMsg: getMsg
         };
@@ -84,20 +84,29 @@
 
             if (type === 'AirQuality') {
 
-                var param = {
-                    '$filter': "County eq '"+ data.city +"'",
-                    '$orderby': 'SiteName',
-                    '$skip': 0,
-                    '$top': 1000,
-                    'format': 'json',
-                    'callback': 'JSON_CALLBACK'
+                var query = {
+                  '$filter': "County eq '"+ data.city +"'",
+                  '$orderby': 'SiteName',
+                  '$skip': 0,
+                  '$top': 1000,
+                  'format': 'json'
                 };
 
                 var isGetAll = false;
                 if (data.getAll !== undefined && data.getAll === true) {
                     isGetAll = true;
-                    delete param['$filter'];
+                    delete query['$filter'];
                 }
+
+                var queryStr = Object.keys(query).map(function(key) {
+                    return key + '=' + query[key];
+                }).join('&');
+
+                var param = {
+                    'type': 'getData',
+                    'query': encodeURIComponent(queryStr),
+                    'callback': 'JSON_CALLBACK'
+                };
 
                 var paramStr = Object.keys(param).map(function(key) {
                     return key + '=' + param[key];
@@ -211,7 +220,7 @@
 
         function getMsg() {
 
-            var url = 'https://script.google.com/macros/s/AKfycbzVHkFnGLVJds6qRHvzg1kHWSWd8HIB1a-dEs_UVaCE6XGEqHi7/exec?callback=JSON_CALLBACK';
+            var url = 'https://script.google.com/macros/s/AKfycbzVHkFnGLVJds6qRHvzg1kHWSWd8HIB1a-dEs_UVaCE6XGEqHi7/exec?type=getMsg&callback=JSON_CALLBACK';
 
             $http.jsonp(url, {})
             .success(function (data, status) {
