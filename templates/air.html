@@ -1,0 +1,31 @@
+<ion-view title="{{city}}地區 空氣品質概況">
+    <ion-content on-release="onRelease()">
+        <ion-refresher
+            pulling-text="Pull to refresh..."
+            on-refresh="doRefresh()"
+            on-pulling="doPulling()">
+        </ion-refresher>
+
+        <div ng-repeat="air in airList" class="list card">
+            <div class="item" ng-click="click()">
+                <h2>{{air.SiteName}} 監測站</h2>
+            </div>
+            <div class="item item-avatar">
+                <img ng-src="{{air.img}}"/>
+                <h2>{{air.PM25_Status}}</h2>
+                <h2>{{air.PublishTime}}</h2>
+            </div>
+            <div class="item">
+                <div class="row">
+                    <div class="col">PSI</div>
+                    <div class="col">{{air.PSI}}</div>
+                </div>
+                <div class="row">
+                    <div class="col">PM2.5</div>
+                    <div class="col">{{air['PM2.5']}}</div>
+                </div>
+            </div>
+        </div>
+
+    </ion-content>
+</ion-view>

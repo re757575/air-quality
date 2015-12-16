@@ -1,0 +1,24 @@
+<ion-view title="目前空氣品質">
+    <ion-content on-swipe-left="goSettings()" on-release="onRelease()">
+        <ion-refresher
+            pulling-text="Pull to refresh..."
+            on-refresh="doRefresh()"
+            on-pulling="doPulling()">
+        </ion-refresher>
+
+        <div class="card">
+          <div class="item item-text-wrap">
+            最後更新時間 {{ lastUpDate | date: 'yyyy-MM-dd HH:mm:ss'}}
+          </div>
+        </div>
+
+        <ion-list class="list">
+            <ion-item class="item item-icon-left" ng-repeat="(key, value) in $root.citysSetting"
+                      href="#/air/city/{{key}}"
+                      ng-show="value.on">
+                <i class="icon ion-ios-home-outline"></i>
+                {{key}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
