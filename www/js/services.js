@@ -163,26 +163,29 @@
                             var PSI = data[i].PSI;
                             var PM25 = data[i]['PM2.5'];
 
-                            if (PM25 === '') {
-                                data[i]['PM2.5'] = '通訊異常 或 設備維護';
-                            }
+                            PM25 === '' ? data[i]['img'] = imageBaseUrl + 'astonished-face.png' :
+                            PM25 <= 11 ? data[i]['img'] = imageBaseUrl + 'laughing-face.png' :
+                            PM25 <= 23 ? data[i]['img'] = imageBaseUrl + 'neutral-face.png' :
+                            PM25 <= 35 ? data[i]['img'] = imageBaseUrl + 'neutral-face.png' :
+                            PM25 <= 41 ? data[i]['img'] = imageBaseUrl + 'neutral-face.png' :
+                            PM25 <= 47 ? data[i]['img'] = imageBaseUrl + 'sad-face-eyebrows.png' :
+                            PM25 <= 53 ? data[i]['img'] = imageBaseUrl + 'sad-face-eyebrows.png' :
+                            PM25 <= 58 ? data[i]['img'] = imageBaseUrl + 'angry-face.png' :
+                            PM25 <= 64 ? data[i]['img'] = imageBaseUrl + 'angry-face.png' :
+                            PM25 <= 70 ? data[i]['img'] = imageBaseUrl + 'angry-face.png' :
+                            PM25 >= 71 ? data[i]['img'] = imageBaseUrl + 'angry-face-teeth.png' : '';
 
-                            if (PSI <= 50) {
-                                // 良好
-                                data[i]['img'] = imageBaseUrl + 'laughing-face.png';
-                            } else if (PSI >= 51 && PSI <= 100) {
-                                // 普通
-                                data[i]['img'] = imageBaseUrl + 'neutral-face.png';
-                            } else if (PSI >= 101 && PSI <= 199) {
-                                // 不良
-                                data[i]['img'] = imageBaseUrl + 'sad-face-eyebrows.png';
-                            } else if (PSI >= 200 && PSI <= 299) {
-                                // 非常不良
-                                data[i]['img'] = imageBaseUrl + 'angry-face.png';
-                            } else {
-                                // 有害
-                                data[i]['img'] = imageBaseUrl + 'angry-face-teeth.png';
-                            }
+                            PM25 === '' ? data[i]['PM25_Status'] = '通訊異常 或 設備維護' :
+                            PM25 <= 11 ? data[i]['PM25_Status'] = '良好' :
+                            PM25 <= 23 ? data[i]['PM25_Status'] = '正常' :
+                            PM25 <= 35 ? data[i]['PM25_Status'] = '正常' :
+                            PM25 <= 41 ? data[i]['PM25_Status'] = '普通' :
+                            PM25 <= 47 ? data[i]['PM25_Status'] = '稍差' :
+                            PM25 <= 53 ? data[i]['PM25_Status'] = '稍差' :
+                            PM25 <= 58 ? data[i]['PM25_Status'] = '不良' :
+                            PM25 <= 64 ? data[i]['PM25_Status'] = '不良' :
+                            PM25 <= 70 ? data[i]['PM25_Status'] = '非常不良' :
+                            PM25 >= 71 ? data[i]['PM25_Status'] = '有害' : '';
                         }
 
                         if (isGetAll === true) {
